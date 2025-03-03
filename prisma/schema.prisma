@@ -1,0 +1,55 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["driverAdapters"]
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+enum DeviceStatus {
+  COMMUNITY
+  OFFICIAL
+}
+
+enum SELinuxStatus {
+  Enforcing
+  Permissive
+}
+
+model Devices {
+  id              String        @id @default(cuid())
+  codename        String
+  name            String
+  version         String
+  androidVersion  Int
+  status          DeviceStatus
+  selinuxStatus   SELinuxStatus
+  kernelsuVersion Int
+  sourcforgeUrl   String
+  changelog       String?
+  note            String?
+
+  publishAt DateTime @default(now())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum TaskStatus {
+  TODO
+  DOING
+  DONE
+}
+
+model Tasks {
+  id        String     @id @default(cuid())
+  title     String
+  content   String
+  status    TaskStatus
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+}

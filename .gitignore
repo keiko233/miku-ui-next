@@ -43,3 +43,8 @@ next-env.d.ts
 # wrangler files
 .wrangler
 .dev.vars
+
+# prisma
+dev.db
+dev.db-journal
+prisma/migrations
