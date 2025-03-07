@@ -1,0 +1,37 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "miku-ui-next",
+  "main": ".open-next/worker.js",
+  "compatibility_date": "2025-03-03",
+  "compatibility_flags": [
+    "nodejs_compat"
+  ],
+  "minify": true,
+  "observability": {
+    "enabled": true
+  },
+  "assets": {
+    "directory": ".open-next/assets",
+    "binding": "ASSETS"
+  },
+  "placement": {
+    "mode": "smart"
+  },
+  "kv_namespaces": [
+    {
+      "binding": "NEXT_CACHE_WORKERS_KV",
+      "id": "f3c360f8c13643359594cf8dcb4d5516"
+    }
+  ],
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "prisma-miku-ui",
+      "database_id": "6976e7fa-a50f-44f3-bc6d-5b53330c872c",
+      "migrations_dir": "./migrations"
+    }
+  ],
+  "ai": {
+    "binding": "AI"
+  }
+}
