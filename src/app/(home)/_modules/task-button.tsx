@@ -17,8 +17,6 @@ import { PropsWithChildren } from "react";
 import { getKysely } from "@/lib/kysely";
 import { TaskStatus } from "@/schema";
 
-const kysely = await getKysely();
-
 const Badge = ({
   children,
   className,
@@ -36,6 +34,8 @@ const Badge = ({
 );
 
 export const TaskButton = async () => {
+  const kysely = await getKysely();
+
   const query = await kysely
     .selectFrom("Tasks")
     .selectAll()

@@ -3,9 +3,9 @@
 import { DeviceCard } from "@/components/device-card";
 import { getKysely } from "@/lib/kysely";
 
-const kysely = await getKysely();
-
 export const DeviceList = async () => {
+  const kysely = await getKysely();
+
   const query = await kysely.selectFrom("Devices").selectAll().execute();
 
   return query.length ? (

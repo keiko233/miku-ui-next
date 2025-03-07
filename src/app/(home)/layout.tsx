@@ -2,7 +2,9 @@ import Link from "next/link";
 import { Container } from "@/components/container";
 import { TaskButton } from "./_modules/task-button";
 
-export default function Layout({
+export const dynamic = "force-dynamic";
+
+export default async function Layout({
   children,
 }: Readonly<{
   children: React.ReactNode;
