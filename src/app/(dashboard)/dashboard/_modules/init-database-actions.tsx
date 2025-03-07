@@ -1,5 +1,6 @@
 "use server";
 
+import { getCloudflareContext } from "@opennextjs/cloudflare";
 import { CHANNEL_ID, INIT_DATABASE_TASK_TITLE } from "@/consts";
 import { getKysely } from "@/lib/kysely";
 import { getChannelLastPostId } from "@/lib/telegram";
@@ -84,10 +85,14 @@ export const initDatabase = async (): Promise<{
 
   const { id } = await createTask("Initializing database");
 
-  execute(id).catch(async (e) => {
-    console.error("Failed to initialize database:", e);
-    await updateTask(id, e.message, TaskStatus.FAILED);
-  });
+  const { ctx } = await getCloudflareContext({ async: true });
+
+  ctx.waitUntil(
+    execute(id).catch(async (e) => {
+      console.error("Failed to initialize database:", e);
+      await updateTask(id, e.message, TaskStatus.FAILED);
+    }),
+  );
 
   return {
     message: "Database initialization task has been started",
