@@ -12,6 +12,7 @@ import {
 } from "@libnyanpasu/material-design-react";
 import Image from "next/image";
 import { Device } from "@/schema";
+import { DeviceInfo } from "./device-info";
 
 const DetialsDialog = ({ device }: { device: Device }) => {
   return (
@@ -29,21 +30,7 @@ const DetialsDialog = ({ device }: { device: Device }) => {
           </CardHeader>
 
           <CardContent>
-            {device.changelog && (
-              <div className="flex flex-col gap-1">
-                <b className="text-base">Changelog:</b>
-                <p className="text-sm whitespace-pre-line">
-                  {device.changelog}
-                </p>
-              </div>
-            )}
-
-            {device.note && (
-              <div className="flex flex-col gap-1">
-                <b className="text-base">Note:</b>
-                <p className="text-sm whitespace-pre-line">{device.note}</p>
-              </div>
-            )}
+            <DeviceInfo device={device} />
           </CardContent>
 
           <CardFooter className="gap-1">

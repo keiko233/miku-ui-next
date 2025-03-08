@@ -7,13 +7,14 @@ import {
   TableHeader,
   TableRow,
 } from "@libnyanpasu/material-design-react";
-import { getDevices } from "@/actions/query/devices";
+import { getContexts } from "@/actions/query/context";
+import { ContentCrawl } from "./_modules/context-crawl";
 import { TableActions } from "./_modules/table-actions";
 
 export const dynamic = "force-dynamic";
 
 export default async function Page() {
-  const query = await getDevices();
+  const query = await getContexts();
 
   return (
     <div className="flex flex-col gap-4">
@@ -25,17 +26,15 @@ export default async function Page() {
           "grid-cols-1",
         )}
       >
-        {/* <ContentCrawl /> */}
+        <ContentCrawl />
       </div>
 
       <Table variant="stroked" className="caption-bottom">
         <TableHeader>
           <TableRow>
-            <TableHead>Device Name</TableHead>
-            <TableHead>Codename</TableHead>
-            <TableHead>Miku UI</TableHead>
-            <TableHead>Publish Date</TableHead>
-            <TableHead>Created Date</TableHead>
+            <TableHead className="w-24">Index</TableHead>
+            <TableHead>Content</TableHead>
+            <TableHead>Update At</TableHead>
             <TableHead>Actions</TableHead>
           </TableRow>
         </TableHeader>
@@ -44,20 +43,16 @@ export default async function Page() {
           <TableBody>
             {query.map((item) => (
               <TableRow key={item.id}>
-                <TableCell className="truncate">{item.name}</TableCell>
+                <TableCell>{item.index}</TableCell>
 
-                <TableCell className="font-mono">{item.codename}</TableCell>
-
-                <TableCell>
-                  {item.version} ({item.androidVersion})
+                <TableCell className="truncate">
+                  {item.content.length > 60
+                    ? `${item.content.substring(0, 60)}...`
+                    : item.content}
                 </TableCell>
 
-                <TableCell>
-                  {new Date(item.publishAt).toLocaleString()}
-                </TableCell>
-
-                <TableCell>
-                  {new Date(item.createdAt).toLocaleString()}
+                <TableCell className="whitespace-nowrap">
+                  {new Date(item.updatedAt).toLocaleString()}
                 </TableCell>
 
                 <TableCell>

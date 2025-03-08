@@ -1,15 +1,13 @@
 "use server";
 
+import { getDevices } from "@/actions/query/devices";
 import { DeviceCard } from "@/components/device-card";
-import { getKysely } from "@/lib/kysely";
 
 export const DeviceList = async () => {
-  const kysely = await getKysely();
-
-  const query = await kysely.selectFrom("Devices").selectAll().execute();
+  const query = await getDevices();
 
   return query.length ? (
-    <div className="grid grid-cols-1 px-4 sm:grid-cols-2 md:grid-cols-3">
+    <div className="grid grid-cols-1 px-4 sm:grid-cols-2 md:grid-cols-3 gap-4">
       {query.map((device) => (
         <DeviceCard key={device.id} device={device} />
       ))}

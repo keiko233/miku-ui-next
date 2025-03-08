@@ -14,7 +14,7 @@ import {
   ModalTrigger,
 } from "@libnyanpasu/material-design-react";
 import { PropsWithChildren } from "react";
-import { getKysely } from "@/lib/kysely";
+import { getTasksWithLimit } from "@/actions/query/tasks";
 import { TaskStatus } from "@/schema";
 
 const Badge = ({
@@ -34,14 +34,7 @@ const Badge = ({
 );
 
 export const TaskButton = async () => {
-  const kysely = await getKysely();
-
-  const query = await kysely
-    .selectFrom("Tasks")
-    .selectAll()
-    .orderBy("createdAt", "desc")
-    .limit(3)
-    .execute();
+  const query = await getTasksWithLimit(3);
 
   const TaskStatusMapping = {
     [TaskStatus.TODO]: <Badge className="bg-slate-500">TODO</Badge>,

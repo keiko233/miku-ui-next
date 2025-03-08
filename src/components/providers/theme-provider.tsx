@@ -37,14 +37,14 @@ export const ThemeProvider = ({ children }: PropsWithChildren) => {
   const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
 
   useEffect(() => {
-    const body = window.document.body;
+    const html = window.document.documentElement;
 
     const value = dark === null ? prefersDarkMode : dark;
 
     if (value) {
-      body.classList.add("dark");
+      html.classList.add("dark");
     } else {
-      body.classList.remove("dark");
+      html.classList.remove("dark");
     }
   }, [dark, prefersDarkMode]);
 
