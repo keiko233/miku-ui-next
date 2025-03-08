@@ -89,7 +89,10 @@ async function execute(id: string, { from, to }: { from: number; to: number }) {
           ...parsedPostContent,
           publishAt: publishDate ?? Date.now(),
         },
-        { version: true },
+        {
+          codename: true,
+          version: true,
+        },
       );
     }),
   );

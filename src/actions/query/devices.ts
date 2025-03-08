@@ -28,11 +28,6 @@ export type CreateDeviceValues = Omit<Device, "id" | "createdAt" | "updatedAt">;
 /**
  * Creates or updates a device in the database
  *
- * @param values - The values to create or update the device with
- * @param unique - Optional object for specifying unique constraints
- * @param unique.version - If true, checks if a device with the same version already exists
- * @returns An object containing the ID of the created or updated device
- *
  * @remarks
  * If `unique.version` is true and a device with the same version exists:
  * - The function compares all properties except createdAt, updatedAt, and id
@@ -47,17 +42,28 @@ export type CreateDeviceValues = Omit<Device, "id" | "createdAt" | "updatedAt">;
 export const createDevice = async (
   values: CreateDeviceValues,
   unique?: {
+    codename?: boolean;
     version?: boolean;
   },
 ) => {
   const kysely = await getKysely();
 
-  if (unique?.version) {
-    const exist = await kysely
+  if (unique?.version || unique?.codename) {
+    // Build the query for checking existing devices
+    let query = kysely
       .selectFrom("Devices")
-      .selectAll()
-      .where("version", "=", values.version)
-      .executeTakeFirst();
+      .selectAll();
+    
+    // Add conditions based on unique constraints
+    if (unique.version) {
+      query = query.where("version", "=", values.version);
+    }
+    
+    if (unique.codename) {
+      query = query.where("codename", "=", values.codename);
+    }
+    
+    const exist = await query.executeTakeFirst();
 
     if (exist) {
       // Check if there are any updates by comparing props with exist
