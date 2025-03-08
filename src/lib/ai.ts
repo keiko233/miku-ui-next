@@ -1,4 +1,5 @@
 import { getCloudflareContext } from "@opennextjs/cloudflare";
+import { CreateDeviceValues } from "@/actions/query/devices";
 
 const ask = async (options: AiTextGenerationInput) => {
   const { env } = await getCloudflareContext({ async: true });
@@ -11,15 +12,17 @@ const ask = async (options: AiTextGenerationInput) => {
   );
 };
 
-export const parsePostContent = async (content: string) => {
+export const parsePostContent = async (
+  content: string,
+): Promise<Omit<CreateDeviceValues, "publishAt">> => {
   try {
     const response = await ask({
       prompt: `Extract device information from the following text and return it ONLY as a valid JSON object without any additional text, explanations, markdown backticks or formatting.
 The response must be a valid parseable JSON object according to the following schema and nothing else:
 {
   "codename": "string, device codename (e.g., 'odin'), force lowercase",
-  "name": "string, device name (e.g., 'Xiaomi Mix 4'), dos not include the codename",
-  "version": "string, ROM version (e.g., 'Vampire v0.6.1'), do not include Miku UI",
+  "name": "string, device name (e.g., 'Xiaomi Mix 4'), dos not include the codename such as 'Xiaomi Mix 4 (odin)', must be 'Xiaomi Mix 4'",
+  "version": "string, ROM version (e.g., 'Vampire v0.6.1'), do not include 'Miku UI' or similar",
   "androidVersion": number, Android version number (e.g., 15),
   "status": "string, either COMMUNITY or OFFICIAL",
   "selinuxStatus": "string, either Enforcing or Permissive",
@@ -97,21 +100,21 @@ IMPORTANT: Your response must be ONLY the JSON object with no additional text. T
       //   },
       // },
     });
-    
+
     // cloudflare workers AI response broken too :)
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let cleanedResponse = (response as any).response;
-    
+
     if (cleanedResponse.startsWith('"') && cleanedResponse.endsWith('"')) {
       cleanedResponse = cleanedResponse.slice(1, -1);
     }
-    
+
     cleanedResponse = cleanedResponse
       .replace(/\\n/g, "\\n")
       .replace(/\\"/g, '\\"')
       .replace(/\\r/g, "\\r")
       .replace(/\\\\/g, "\\\\");
-    
+
     return JSON.parse(cleanedResponse);
   } catch (error) {
     console.error("Failed to parse AI response:", error);
