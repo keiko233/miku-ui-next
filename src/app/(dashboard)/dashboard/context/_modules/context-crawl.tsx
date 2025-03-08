@@ -19,6 +19,12 @@ import { executeCrawl } from "@/actions/task/context-crawl";
 import { getLastPostId } from "@/actions/telegram/post";
 import { MessagePolling } from "@/components/message-polling";
 
+const CONTEXT_CRAWL_TIPS =
+  "Context Crawl process must run within Cloudflare Workers' WaitUntil, " +
+  "the total task time needs to be kept under 30 seconds. So, it's best " +
+  "not to dispatch too many tasks at once, even though we've already " +
+  "implemented a concurrent workaround.";
+
 const GetLastPostID = ({
   onFinish,
 }: {
@@ -138,10 +144,7 @@ export const ContentCrawl = () => {
 
       <CardContent>
         <p className="text-sm text-zinc-700 dark:text-zinc-300">
-          Context Crawl process must run within Cloudflare Workers' WaitUntil,
-          the total task time needs to be kept under 30 seconds. So, it's best
-          not to dispatch too many tasks at once, even though we've already
-          implemented a concurrent workaround.
+          {CONTEXT_CRAWL_TIPS}
         </p>
 
         <Input
