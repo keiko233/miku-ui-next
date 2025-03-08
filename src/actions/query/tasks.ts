@@ -59,12 +59,28 @@ export const updateTaskById = async (
 ) => {
   const kysely = await getKysely();
 
+  // If there's content to append, get the existing content first
+  if (content) {
+    const existingTask = await kysely
+      .selectFrom("Tasks")
+      .where("id", "=", id)
+      .select(["content"])
+      .executeTakeFirst();
+
+    if (existingTask) {
+      // Append new content to existing content with a line break
+      content = existingTask.content
+        ? `${existingTask.content}\n${content}`
+        : content;
+    }
+  }
+
   return await kysely
     .updateTable("Tasks")
     .where("id", "=", id)
     .set({
       status,
-      content,
+      ...(content !== undefined && { content }),
       updatedAt: new Date().getTime(),
     })
     .execute();
@@ -80,12 +96,18 @@ export const updateTaskById = async (
 export const getTasksWithLimit = async (limit: number) => {
   const kysely = await getKysely();
 
-  return await kysely
+  const tasks = await kysely
     .selectFrom("Tasks")
     .selectAll()
     .orderBy("createdAt", "desc")
     .limit(limit)
     .execute();
+
+  // Process each task to only keep the last line of content
+  return tasks.map((task) => ({
+    ...task,
+    content: task.content ? task.content.split("\n").pop() || "" : "",
+  }));
 };
 
 /**

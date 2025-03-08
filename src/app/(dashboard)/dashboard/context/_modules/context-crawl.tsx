@@ -56,8 +56,6 @@ const ExecuteDialog = ({ from, to }: { from?: number; to?: number }) => {
 
   const [taskId, setTaskId] = useState<string>();
 
-  const [message, setMessage] = useState<string>();
-
   const [isFinished, setIsFinished] = useState(false);
 
   const handleClick = useLockFn(async () => {
@@ -66,9 +64,7 @@ const ExecuteDialog = ({ from, to }: { from?: number; to?: number }) => {
     }
     try {
       setPending(true);
-      const { message, taskId } = await executeCrawl(from, to);
-
-      setMessage(message);
+      const { taskId } = await executeCrawl(from, to);
 
       if (taskId) {
         setTaskId(taskId);
@@ -89,7 +85,6 @@ const ExecuteDialog = ({ from, to }: { from?: number; to?: number }) => {
 
     if (!v) {
       setPending(false);
-      setMessage(undefined);
       setTaskId(undefined);
       setIsFinished(false);
     }
@@ -102,15 +97,13 @@ const ExecuteDialog = ({ from, to }: { from?: number; to?: number }) => {
       </ModalTrigger>
 
       <ModalContent>
-        <Card className="w-96">
+        <Card className="min-w-96 max-w-2xl">
           <CardHeader>
             <ModalTitle>Execute Crawl</ModalTitle>
           </CardHeader>
 
           <CardContent className="gap-1">
-            {message ? (
-              <p>{message}</p>
-            ) : (
+            {!taskId && (
               <p>
                 Are you sure you want to crawl the content from {from} to {to}?
               </p>

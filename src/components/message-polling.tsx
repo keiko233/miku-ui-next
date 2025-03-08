@@ -14,15 +14,13 @@ export const MessagePolling = ({
   onFinish?: () => void;
   intervalTime?: number;
 }) => {
-  const [message, setMessage] = useState<string[]>([]);
+  const [message, setMessage] = useState<string>();
 
   const clearInterval = useInterval(async () => {
     const res = await getTaskById(taskId);
 
     if (res?.content) {
-      if (res.content !== message[message.length - 1]) {
-        setMessage((prev) => [...prev, res.content]);
-      }
+      setMessage(res.content);
     }
 
     if (res?.status !== TaskStatus.DOING) {
@@ -31,5 +29,5 @@ export const MessagePolling = ({
     }
   }, intervalTime ?? 3000);
 
-  return message.map((msg, index) => <p key={index}>{msg}</p>);
+  return <p className="whitespace-pre-line font-mono">{message}</p>;
 };
