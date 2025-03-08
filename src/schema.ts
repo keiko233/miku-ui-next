@@ -41,7 +41,16 @@ export interface Task {
   updatedAt: number;
 }
 
+export interface Context {
+  id: string;
+  index: number;
+  content: string;
+  createdAt: number;
+  updatedAt: number;
+}
+
 export interface Database {
   Devices: Device;
   Tasks: Task;
+  Context: Context;
 }
