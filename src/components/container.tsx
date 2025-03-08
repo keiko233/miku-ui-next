@@ -10,7 +10,7 @@ export const Container = ({
   rightContent?: ReactNode;
 }) => {
   return (
-    <div className="dark:bg-on-surface dark:text-surface h-dvh overflow-x-hidden">
+    <div className="dark:text-surface h-dvh overflow-x-hidden">
       <div className="bg-primary-container dark:bg-on-secondary-container flex h-16 items-center gap-2 px-4">
         {/* <Image src="/banner.png" width={128} height={128} alt="banner" /> */}
 
