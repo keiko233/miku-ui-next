@@ -15,7 +15,7 @@ export const DeviceCard = ({ device }: { device: Device }) => {
     Status: device.status,
     SELinux: device.selinuxStatus,
     "Kernel SU": device.kernelsuVersion,
-    "Update Date": new Date(device.updatedAt).toDateString(),
+    "Publish Date": new Date(device.publishAt).toDateString(),
   };
 
   return (
