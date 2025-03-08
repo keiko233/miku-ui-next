@@ -50,6 +50,8 @@ const GetLastPostID = ({
 };
 
 const ExecuteDialog = ({ from, to }: { from?: number; to?: number }) => {
+  const [open, setOpen] = useState(false);
+
   const [pending, setPending] = useState(false);
 
   const [taskId, setTaskId] = useState<string>();
@@ -77,8 +79,24 @@ const ExecuteDialog = ({ from, to }: { from?: number; to?: number }) => {
     }
   });
 
+  const handleFinish = () => {
+    setPending(false);
+    setIsFinished(true);
+  };
+
+  const handleOpenChange = (v: boolean) => {
+    setOpen(v);
+
+    if (!v) {
+      setPending(false);
+      setMessage(undefined);
+      setTaskId(undefined);
+      setIsFinished(false);
+    }
+  };
+
   return (
-    <Modal>
+    <Modal open={open} onOpenChange={handleOpenChange}>
       <ModalTrigger asChild>
         <Button variant="flat">Execute</Button>
       </ModalTrigger>
@@ -99,13 +117,7 @@ const ExecuteDialog = ({ from, to }: { from?: number; to?: number }) => {
             )}
 
             {taskId && (
-              <MessagePolling
-                taskId={taskId}
-                onFinish={() => {
-                  setPending(false);
-                  setIsFinished(true);
-                }}
-              />
+              <MessagePolling taskId={taskId} onFinish={handleFinish} />
             )}
           </CardContent>
 
