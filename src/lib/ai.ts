@@ -1,5 +1,13 @@
 import { getCloudflareContext } from "@opennextjs/cloudflare";
 import { CreateDeviceValues } from "@/actions/query/devices";
+import { DeviceSchema } from "@/schema";
+
+const CreateDeviceValuesSchema = DeviceSchema.omit({
+  id: true,
+  publishAt: true,
+  createdAt: true,
+  updatedAt: true,
+});
 
 const ask = async (options: AiTextGenerationInput) => {
   const { env } = await getCloudflareContext({ async: true });
@@ -117,7 +125,13 @@ IMPORTANT:
       .replace(/\\r/g, "\\r")
       .replace(/\\\\/g, "\\\\");
 
-    return JSON.parse(cleanedResponse);
+    try {
+      const parsedData = JSON.parse(cleanedResponse);
+      return CreateDeviceValuesSchema.parse(parsedData);
+    } catch (parseError) {
+      console.error("Data validation failed:", parseError);
+      return null;
+    }
   } catch (error) {
     console.error("Failed to parse AI response:", error);
     throw new Error("Failed to parse device information");
