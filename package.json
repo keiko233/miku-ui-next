@@ -16,9 +16,9 @@
 		"prepare": "husky && pnpm prepare:d1"
 	},
 	"dependencies": {
-		"@libnyanpasu/material-design-libs": "^0.1.3",
-		"@libnyanpasu/material-design-react": "^0.1.3",
-		"@libnyanpasu/material-design-tailwind": "^0.1.3",
+		"@libnyanpasu/material-design-libs": "^0.1.4",
+		"@libnyanpasu/material-design-react": "^0.1.4",
+		"@libnyanpasu/material-design-tailwind": "^0.1.4",
 		"ahooks": "^3.8.4",
 		"kysely": "^0.27.6",
 		"kysely-d1": "^0.3.0",

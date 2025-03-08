@@ -9,14 +9,14 @@ importers:
   .:
     dependencies:
       '@libnyanpasu/material-design-libs':
-        specifier: ^0.1.3
-        version: 0.1.3(@material/material-color-utilities@0.3.0)(class-variance-authority@0.7.1)(clsx@2.1.1)(lodash-es@4.17.21)(tailwind-merge@3.0.2)
+        specifier: ^0.1.4
+        version: 0.1.4(@material/material-color-utilities@0.3.0)(class-variance-authority@0.7.1)(clsx@2.1.1)(lodash-es@4.17.21)(tailwind-merge@3.0.2)
       '@libnyanpasu/material-design-react':
-        specifier: ^0.1.3
-        version: 0.1.3(@material/material-color-utilities@0.3.0)(@types/react-dom@19.0.4(@types/react@19.0.10))(@types/react@19.0.10)(class-variance-authority@0.7.1)(clsx@2.1.1)(framer-motion@12.4.10(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(lodash-es@4.17.21)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(tailwind-merge@3.0.2)
+        specifier: ^0.1.4
+        version: 0.1.4(@material/material-color-utilities@0.3.0)(@types/react-dom@19.0.4(@types/react@19.0.10))(@types/react@19.0.10)(class-variance-authority@0.7.1)(clsx@2.1.1)(framer-motion@12.4.10(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(lodash-es@4.17.21)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(tailwind-merge@3.0.2)
       '@libnyanpasu/material-design-tailwind':
-        specifier: ^0.1.3
-        version: 0.1.3
+        specifier: ^0.1.4
+        version: 0.1.4
       ahooks:
         specifier: ^3.8.4
         version: 3.8.4(react@19.0.0)
@@ -1280,11 +1280,11 @@ packages:
   '@jridgewell/trace-mapping@0.3.9':
     resolution: {integrity: sha512-3Belt6tdc8bPgAtbcmdtNJlirVoTmEb5e2gC94PnkwEW9jI6CAHUeoG85tjWP5WquqfavoMtMwiG4P926ZKKuQ==}
 
-  '@libnyanpasu/material-design-components@0.1.3':
-    resolution: {integrity: sha512-E+YQ4seXLziZLHXBFwKqE9ew6fTeuK27MYbR980JwbN+GlRF0UsxPdWKdbn+ZRtM5IwWHOAkx4KMUFgVwQDgCQ==}
+  '@libnyanpasu/material-design-components@0.1.4':
+    resolution: {integrity: sha512-vVDOCVEjrj7YC9zE9gh63QAfcbjYXgnzr1h8evj6DlVO23ccsWBcfjeWO1z8cZ5pbRvjR+NBckiT+BaDetrudg==}
 
-  '@libnyanpasu/material-design-libs@0.1.3':
-    resolution: {integrity: sha512-yu2LzzTiCStGohK6EHSWbjAANAJMD+9p1Kp6G2Q7d5Z7tx3SNodVpKS1dXFMqLDbZXC+LDeEKQoE1gCfQRw7nw==}
+  '@libnyanpasu/material-design-libs@0.1.4':
+    resolution: {integrity: sha512-Orc6tS/yZPFmNqJiEDlKGN7xk5rKMMPpUXgZQdDegBKukTToQ9FywQOMGSA4dsiHwr8NneYCAk+VtHKGqwvQgQ==}
     peerDependencies:
       '@material/material-color-utilities': '*'
       class-variance-authority: '*'
@@ -1292,15 +1292,15 @@ packages:
       lodash-es: '*'
       tailwind-merge: '*'
 
-  '@libnyanpasu/material-design-react@0.1.3':
-    resolution: {integrity: sha512-QVmLVlWYrXn/gaxGjjIOBmGQ1AyN3vnZ2XYSlYSWs7E2kiV8xBT1c5kLEuamClal/rzO2liDrbq0rgsqbAqasw==}
+  '@libnyanpasu/material-design-react@0.1.4':
+    resolution: {integrity: sha512-9kCCkLP7+f8FbqpSUm+XtDT/t3jk2f2HWk0piEOj/nUXeaLdOA2IYQrDNN6+llsQbpBz4XHq9i1yp90dGQIrBA==}
     peerDependencies:
       framer-motion: ^12.0.0-alpha.2
       react: ^19.0.0
       react-dom: ^19.0.0
 
-  '@libnyanpasu/material-design-tailwind@0.1.3':
-    resolution: {integrity: sha512-lYM23SYjIdRqlVPzxAYRFm49JP0ZwIJl5ggAw5dbx6LhUPsYD0O61sgetBhUzIh69UxXFjji5KvSimxdSvsMQw==}
+  '@libnyanpasu/material-design-tailwind@0.1.4':
+    resolution: {integrity: sha512-MzbL6iW6VU2bBAZXoxIIBM3WJH19eF/JR0EcmtL4/53ODNi54oOH/N1bQt9YIOvKlBy0D5vP8CwP/fmZl0XGDA==}
 
   '@material/material-color-utilities@0.3.0':
     resolution: {integrity: sha512-ztmtTd6xwnuh2/xu+Vb01btgV8SQWYCaK56CkRK8gEkWe5TuDyBcYJ0wgkMRn+2VcE9KUmhvkz+N9GHrqw/C0g==}
@@ -6388,9 +6388,9 @@ snapshots:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.5.0
 
-  '@libnyanpasu/material-design-components@0.1.3(@material/material-color-utilities@0.3.0)(class-variance-authority@0.7.1)(clsx@2.1.1)(lodash-es@4.17.21)(tailwind-merge@3.0.2)':
+  '@libnyanpasu/material-design-components@0.1.4(@material/material-color-utilities@0.3.0)(class-variance-authority@0.7.1)(clsx@2.1.1)(lodash-es@4.17.21)(tailwind-merge@3.0.2)':
     dependencies:
-      '@libnyanpasu/material-design-libs': 0.1.3(@material/material-color-utilities@0.3.0)(class-variance-authority@0.7.1)(clsx@2.1.1)(lodash-es@4.17.21)(tailwind-merge@3.0.2)
+      '@libnyanpasu/material-design-libs': 0.1.4(@material/material-color-utilities@0.3.0)(class-variance-authority@0.7.1)(clsx@2.1.1)(lodash-es@4.17.21)(tailwind-merge@3.0.2)
     transitivePeerDependencies:
       - '@material/material-color-utilities'
       - class-variance-authority
@@ -6398,7 +6398,7 @@ snapshots:
       - lodash-es
       - tailwind-merge
 
-  '@libnyanpasu/material-design-libs@0.1.3(@material/material-color-utilities@0.3.0)(class-variance-authority@0.7.1)(clsx@2.1.1)(lodash-es@4.17.21)(tailwind-merge@3.0.2)':
+  '@libnyanpasu/material-design-libs@0.1.4(@material/material-color-utilities@0.3.0)(class-variance-authority@0.7.1)(clsx@2.1.1)(lodash-es@4.17.21)(tailwind-merge@3.0.2)':
     dependencies:
       '@material/material-color-utilities': 0.3.0
       class-variance-authority: 0.7.1
@@ -6406,10 +6406,10 @@ snapshots:
       lodash-es: 4.17.21
       tailwind-merge: 3.0.2
 
-  '@libnyanpasu/material-design-react@0.1.3(@material/material-color-utilities@0.3.0)(@types/react-dom@19.0.4(@types/react@19.0.10))(@types/react@19.0.10)(class-variance-authority@0.7.1)(clsx@2.1.1)(framer-motion@12.4.10(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(lodash-es@4.17.21)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(tailwind-merge@3.0.2)':
+  '@libnyanpasu/material-design-react@0.1.4(@material/material-color-utilities@0.3.0)(@types/react-dom@19.0.4(@types/react@19.0.10))(@types/react@19.0.10)(class-variance-authority@0.7.1)(clsx@2.1.1)(framer-motion@12.4.10(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(lodash-es@4.17.21)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(tailwind-merge@3.0.2)':
     dependencies:
-      '@libnyanpasu/material-design-components': 0.1.3(@material/material-color-utilities@0.3.0)(class-variance-authority@0.7.1)(clsx@2.1.1)(lodash-es@4.17.21)(tailwind-merge@3.0.2)
-      '@libnyanpasu/material-design-libs': 0.1.3(@material/material-color-utilities@0.3.0)(class-variance-authority@0.7.1)(clsx@2.1.1)(lodash-es@4.17.21)(tailwind-merge@3.0.2)
+      '@libnyanpasu/material-design-components': 0.1.4(@material/material-color-utilities@0.3.0)(class-variance-authority@0.7.1)(clsx@2.1.1)(lodash-es@4.17.21)(tailwind-merge@3.0.2)
+      '@libnyanpasu/material-design-libs': 0.1.4(@material/material-color-utilities@0.3.0)(class-variance-authority@0.7.1)(clsx@2.1.1)(lodash-es@4.17.21)(tailwind-merge@3.0.2)
       '@radix-ui/react-dialog': 1.1.6(@types/react-dom@19.0.4(@types/react@19.0.10))(@types/react@19.0.10)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       '@radix-ui/react-dropdown-menu': 2.1.6(@types/react-dom@19.0.4(@types/react@19.0.10))(@types/react@19.0.10)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       '@radix-ui/react-select': 2.1.6(@types/react-dom@19.0.4(@types/react@19.0.10))(@types/react@19.0.10)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
@@ -6428,7 +6428,7 @@ snapshots:
       - lodash-es
       - tailwind-merge
 
-  '@libnyanpasu/material-design-tailwind@0.1.3': {}
+  '@libnyanpasu/material-design-tailwind@0.1.4': {}
 
   '@material/material-color-utilities@0.3.0': {}
 
