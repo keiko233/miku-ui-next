@@ -4,9 +4,56 @@ import {
   CardContent,
   CardFooter,
   CardHeader,
+  Modal,
+  ModalClose,
+  ModalContent,
+  ModalTitle,
+  ModalTrigger,
 } from "@libnyanpasu/material-design-react";
 import Image from "next/image";
 import { Device } from "@/schema";
+
+const DetialsDialog = ({ device }: { device: Device }) => {
+  return (
+    <Modal>
+      <ModalTrigger asChild>
+        <Button>Details</Button>
+      </ModalTrigger>
+
+      <ModalContent>
+        <Card className="w-96">
+          <CardHeader>
+            <ModalTitle>
+              {device.name} {device.version}
+            </ModalTitle>
+          </CardHeader>
+
+          <CardContent>
+            {device.changelog && (
+              <div className="flex flex-col gap-1">
+                <b className="text-base">Changelog:</b>
+                <p className="text-sm whitespace-pre-line">
+                  {device.changelog}
+                </p>
+              </div>
+            )}
+
+            {device.note && (
+              <div className="flex flex-col gap-1">
+                <b className="text-base">Note:</b>
+                <p className="text-sm whitespace-pre-line">{device.note}</p>
+              </div>
+            )}
+          </CardContent>
+
+          <CardFooter className="gap-1">
+            <ModalClose>Close</ModalClose>
+          </CardFooter>
+        </Card>
+      </ModalContent>
+    </Modal>
+  );
+};
 
 export const DeviceCard = ({ device }: { device: Device }) => {
   const Mapping = {
@@ -18,14 +65,15 @@ export const DeviceCard = ({ device }: { device: Device }) => {
     "Publish Date": new Date(device.publishAt).toDateString(),
   };
 
+  // TODO: Image as transparent resource
   return (
-    <Card key={device.id} className="shadow">
-      <div className="grid h-48 place-items-center bg-white">
+    <Card key={device.id} className="overflow-clip shadow">
+      <div className="flex h-48 justify-center bg-white">
         <Image
           src={`/devices/${device.codename.toLocaleLowerCase()}.png`}
           width={192}
           height={192}
-          alt="banner"
+          alt={`${device.name} device image`}
         />
       </div>
 
@@ -33,7 +81,7 @@ export const DeviceCard = ({ device }: { device: Device }) => {
         <h2>
           {device.name}
           <span className="text-on-surface-variant/50"> / </span>
-          {device.codename}
+          <code>{device.codename}</code>
         </h2>
       </CardHeader>
 
@@ -46,9 +94,11 @@ export const DeviceCard = ({ device }: { device: Device }) => {
       </CardContent>
 
       <CardFooter className="gap-1">
-        <Button>Download</Button>
+        <a href={device.sourcforgeUrl} target="_blank">
+          <Button>Download</Button>
+        </a>
 
-        <Button>Detail</Button>
+        <DetialsDialog device={device} />
       </CardFooter>
     </Card>
   );
