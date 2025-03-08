@@ -10,8 +10,11 @@ test("telegram get latest post id", { timeout: 10000, retry: 3 }, async () => {
 });
 
 test("test get post content", { timeout: 10000, retry: 3 }, async () => {
-  const content = await getRawPostContent(CHANNEL_ID, 535);
+  const { content, publishDate } = await getRawPostContent(CHANNEL_ID, 535);
 
   expect(content).toBeDefined();
   expect(typeof content).toBe("string");
+
+  expect(publishDate).toBeDefined();
+  expect(typeof publishDate).toBe("number");
 });

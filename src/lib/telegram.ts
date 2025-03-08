@@ -33,24 +33,26 @@ export const getChannelLastPostId = async (
 };
 
 /**
- * Retrieves the raw content of a Telegram post.
+ * Retrieves the raw content and publish date of a Telegram post.
  *
  * This function fetches the HTML of a public Telegram post and extracts
- * the text content using regex pattern matching.
+ * the text content and publish date using regex pattern matching.
  *
  * @param channel - The Telegram channel name (without the '@' symbol)
  * @param id - The post ID (message ID) in the channel
- * @returns A Promise that resolves to the raw text content of the post if found,
- *          or undefined if the content couldn't be extracted
+ * @returns A Promise that resolves to an object containing the raw text content and publish date (as Unix timestamp)
  *
  * @example
- * // Get content from https://t.me/channelname/123
- * const content = await getRawPostContent('channelname', 123);
+ * // Get content and publish date from https://t.me/channelname/123
+ * const { content, publishDate } = await getRawPostContent('channelname', 123);
  */
 export const getRawPostContent = async (
   channel: string,
   id: number | string,
-): Promise<string | null> => {
+): Promise<{
+  content: string | null;
+  publishDate: number | null;
+}> => {
   const res = await fetchWithRetry(`https://t.me/s/${channel}/${id}`);
   const text = await res.text();
 
@@ -59,16 +61,32 @@ export const getRawPostContent = async (
   // 1. Match the message container that contains the data-post attribute and the value is dataPost
   // 2. Find the div that contains the class "tgme_widget_message_text" and "js-message_text" in the container
   // 3. Capture the content inside the div (use non-greedy matching)
-  const regex = new RegExp(
+  const contentRegex = new RegExp(
     `<div[^>]+data-post=["']${dataPost}["'][^>]*>[\\s\\S]*?<div[^>]+class=["'][^"']*(?:tgme_widget_message_text\\s+js-message_text|js-message_text\\s+tgme_widget_message_text)[^"']*["'][^>]*>([\\s\\S]*?)<\\/div>`,
     "i",
   );
 
-  const match = text.match(regex);
+  const contentMatch = text.match(contentRegex);
 
-  if (match && match[1]) {
-    return match[1];
-  } else {
-    return null;
+  const content = contentMatch && contentMatch[1] ? contentMatch[1] : null;
+
+  // Match the datetime in the message date element
+  const dateRegex = new RegExp(
+    `<div[^>]+data-post=["']${dataPost}["'][^>]*>[\\s\\S]*?<a[^>]+class=["']tgme_widget_message_date["'][^>]*><time datetime=["']([^"']+)["']`,
+    "i",
+  );
+
+  const dateMatch = text.match(dateRegex);
+
+  // Extract and convert publish date to timestamp
+  let publishDate: number | null = null;
+  if (dateMatch && dateMatch[1]) {
+    const dateString = dateMatch[1];
+    publishDate = new Date(dateString).getTime();
   }
+
+  return {
+    content,
+    publishDate,
+  };
 };
