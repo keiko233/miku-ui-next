@@ -56,6 +56,8 @@ const ExecuteDialog = ({ from, to }: { from?: number; to?: number }) => {
 
   const [message, setMessage] = useState<string>();
 
+  const [isFinished, setIsFinished] = useState(false);
+
   const handleClick = useLockFn(async () => {
     if (!from || !to) {
       return;
@@ -101,15 +103,18 @@ const ExecuteDialog = ({ from, to }: { from?: number; to?: number }) => {
                 taskId={taskId}
                 onFinish={() => {
                   setPending(false);
+                  setIsFinished(true);
                 }}
               />
             )}
           </CardContent>
 
           <CardFooter className="gap-1">
-            <Button variant="flat" loading={pending} onClick={handleClick}>
-              Yes
-            </Button>
+            {!isFinished && (
+              <Button variant="flat" loading={pending} onClick={handleClick}>
+                Yes
+              </Button>
+            )}
 
             <ModalClose>Close</ModalClose>
           </CardFooter>
