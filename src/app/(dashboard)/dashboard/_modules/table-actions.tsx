@@ -10,8 +10,11 @@ import {
   ModalTitle,
   ModalTrigger,
 } from "@libnyanpasu/material-design-react";
+import MaterialSymbolsDeleteForeverRounded from "~icons/material-symbols/delete-forever-rounded";
 import { DeviceInfo } from "@/components/device-info";
 import { Device } from "@/schema";
+import { deleteDevice } from "@/actions/query/devices";
+import { revalidatePath } from "next/cache";
 
 const DetialsButton = ({ data }: { data: Device }) => {
   const Mapping = {
@@ -61,10 +64,28 @@ const DetialsButton = ({ data }: { data: Device }) => {
   );
 };
 
+const DeleteButton = ({ data }: { data: Device }) => {
+  const handleClick = async () => {
+    "use server";
+
+    await deleteDevice(data.id);
+
+    revalidatePath("/");
+  }
+
+  return (
+    <Button icon variant="stroked">
+      <MaterialSymbolsDeleteForeverRounded onClick={handleClick} />
+    </Button>
+  );
+};
+
 export const TableActions = ({ data }: { data: Device }) => {
   return (
     <div className="flex gap-2">
       <DetialsButton data={data} />
+
+      <DeleteButton data={data} />
     </div>
   );
 };

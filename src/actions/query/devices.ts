@@ -103,3 +103,16 @@ export const createDevice = async (
 
   return { id };
 };
+
+/**
+ * Deletes a device from the database by its ID.
+ * 
+ * @param id - The unique identifier of the device to delete
+ * @returns A Promise that resolves when the device has been successfully deleted
+ * @async
+ */
+export const deleteDevice = async (id: string) => {
+  const kysely = await getKysely();
+
+  await kysely.deleteFrom("Devices").where("id", "=", id).execute();
+};
