@@ -14,7 +14,7 @@ const ask = async (options: AiTextGenerationInput) => {
 
 export const parsePostContent = async (
   content: string,
-): Promise<Omit<CreateDeviceValues, "publishAt">> => {
+): Promise<Omit<CreateDeviceValues, "publishAt"> | null> => {
   try {
     const response = await ask({
       prompt: `Extract device information from the following text and return it ONLY as a valid JSON object without any additional text, explanations, markdown backticks or formatting.
@@ -35,7 +35,9 @@ The response must be a valid parseable JSON object according to the following sc
 Content to parse:
 ${content}
 
-IMPORTANT: Your response must be ONLY the JSON object with no additional text. The JSON should be compressed to a single line without any line breaks or unnecessary whitespace.`,
+IMPORTANT: 
+1. Your response must be ONLY the JSON object with no additional text. The JSON should be compressed to a single line without any line breaks or unnecessary whitespace.
+2. If you cannot extract valid information from the content that matches the schema, respond only with null and nothing else.`,
       max_tokens: 1024,
       // fucking cloudflare workers AI JSON output was broken
       // response_format: {

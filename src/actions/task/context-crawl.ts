@@ -6,6 +6,7 @@ import { parsePostContent } from "@/lib/ai";
 import { getRawPostContent } from "@/lib/telegram";
 import { TaskStatus } from "@/schema";
 import { formatError } from "@/utils/fmt";
+import { retry } from "@/utils/retry";
 import {
   createContext,
   getContextByIndex,
@@ -63,7 +64,24 @@ async function execute(id: string, { from, to }: { from: number; to: number }) {
 
       // Parse post content via AI model
       await updateTaskById(id, `Parse post content from channel ${info}`);
-      const parsedPostContent = await parsePostContent(postContent);
+      const parsedPostContent = await retry(
+        () => parsePostContent(postContent),
+        {
+          maxRetries: 3,
+          initialDelay: 500,
+          maxDelay: 5000,
+          factor: 2,
+        },
+      );
+
+      if (!parsedPostContent) {
+        await updateTaskById(
+          id,
+          `Cannot parse post content from channel ${info}`,
+        );
+
+        return;
+      }
 
       // write to database unique device
       await createDevice(
