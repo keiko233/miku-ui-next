@@ -52,9 +52,11 @@ const GetLastPostID = ({
 const ExecuteDialog = ({ from, to }: { from?: number; to?: number }) => {
   const [open, setOpen] = useState(false);
 
+  const [currentPostId, setCurrentPostId] = useState<number>();
+
   const [pending, setPending] = useState(false);
 
-  const [taskId, setTaskId] = useState<string>();
+  const [taskIds, setTaskIds] = useState<string[]>([]);
 
   const [isFinished, setIsFinished] = useState(false);
 
@@ -62,12 +64,20 @@ const ExecuteDialog = ({ from, to }: { from?: number; to?: number }) => {
     if (!from || !to) {
       return;
     }
+
+    if (from > to) {
+      return;
+    }
+
     try {
       setPending(true);
-      const { taskId } = await executeCrawl(from, to);
+
+      setCurrentPostId(from);
+
+      const { taskId } = await executeCrawl(from);
 
       if (taskId) {
-        setTaskId(taskId);
+        setTaskIds((prev) => [...prev, taskId]);
       }
     } catch (e) {
       console.error(e);
@@ -75,9 +85,24 @@ const ExecuteDialog = ({ from, to }: { from?: number; to?: number }) => {
     }
   });
 
-  const handleFinish = () => {
-    setPending(false);
-    setIsFinished(true);
+  const handleFinish = async () => {
+    if (currentPostId === to) {
+      setPending(false);
+      setIsFinished(true);
+      return;
+    }
+
+    if (currentPostId) {
+      const nextPostId = currentPostId + 1;
+
+      setCurrentPostId(nextPostId);
+
+      const { taskId } = await executeCrawl(nextPostId);
+
+      if (taskId) {
+        setTaskIds((prev) => [...prev, taskId]);
+      }
+    }
   };
 
   const handleOpenChange = (v: boolean) => {
@@ -85,7 +110,7 @@ const ExecuteDialog = ({ from, to }: { from?: number; to?: number }) => {
 
     if (!v) {
       setPending(false);
-      setTaskId(undefined);
+      setTaskIds([]);
       setIsFinished(false);
     }
   };
@@ -97,21 +122,28 @@ const ExecuteDialog = ({ from, to }: { from?: number; to?: number }) => {
       </ModalTrigger>
 
       <ModalContent>
-        <Card className="min-w-96 max-w-2xl">
+        <Card className="max-w-2xl min-w-96">
           <CardHeader>
             <ModalTitle>Execute Crawl</ModalTitle>
           </CardHeader>
 
           <CardContent className="gap-1">
-            {!taskId && (
+            {!taskIds.length && (
               <p>
                 Are you sure you want to crawl the content from {from} to {to}?
               </p>
             )}
 
-            {taskId && (
-              <MessagePolling taskId={taskId} onFinish={handleFinish} />
+            {currentPostId && (
+              <span className="text-sm text-zinc-500">
+                Current Post: {currentPostId}
+              </span>
             )}
+
+            {taskIds.length &&
+              taskIds.map((id) => (
+                <MessagePolling key={id} taskId={id} onFinish={handleFinish} />
+              ))}
           </CardContent>
 
           <CardFooter className="gap-1">
