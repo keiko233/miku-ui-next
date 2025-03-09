@@ -138,7 +138,7 @@ const ExecuteDialog = ({ from, to }: { from?: number; to?: number }) => {
 
             {currentPostId && (
               <span className="text-sm text-zinc-500">
-                Current Post: {currentPostId}
+                Current Post: {currentPostId} / {to}
               </span>
             )}
 
