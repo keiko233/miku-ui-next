@@ -1,5 +1,6 @@
 "use server";
 
+import { DEFAULT_CARD_PAGE_SIZE } from "@/consts";
 import { getKysely } from "@/lib/kysely";
 import { Context } from "@/schema";
 
@@ -7,18 +8,39 @@ import { Context } from "@/schema";
  * Retrieves all contexts from the database, ordered by creation date in descending order.
  *
  * This function establishes a database connection using Kysely and queries the 'Context' table.
- *
- * @returns {Promise<Array<Context>>} A promise that resolves to an array of Context objects.
- * @async
  */
-export const getContexts = async () => {
+export const getContexts = async (options?: {
+  page?: number;
+  limit?: number;
+}) => {
   const kysely = await getKysely();
+  const page = Number(options?.page) || 1;
+  const limit = Number(options?.limit) || DEFAULT_CARD_PAGE_SIZE;
+  const offset = (page - 1) * limit;
 
-  return await kysely
-    .selectFrom("Context")
-    .selectAll()
-    .orderBy("createdAt", "desc")
-    .execute();
+  const [contexts, totalCountResult] = await Promise.all([
+    kysely
+      .selectFrom("Context")
+      .selectAll()
+      .orderBy("createdAt", "desc")
+      .limit(limit)
+      .offset(offset)
+      .execute(),
+    kysely
+      .selectFrom("Context")
+      .select(({ fn }) => [fn.count("id").as("total")])
+      .executeTakeFirstOrThrow(),
+  ]);
+
+  return {
+    contexts,
+    pagination: {
+      page,
+      limit,
+      total: Number(totalCountResult.total),
+      totalPages: Math.ceil(Number(totalCountResult.total) / limit),
+    },
+  };
 };
 
 /**

@@ -10,11 +10,26 @@ import {
 import { getContexts } from "@/actions/query/context";
 import { ContentCrawl } from "./_modules/context-crawl";
 import { TableActions } from "./_modules/table-actions";
+import { Pagination } from "@/components/pagination";
 
 export const dynamic = "force-dynamic";
 
-export default async function Page() {
-  const query = await getContexts();
+type PageSearchParams = Promise<{
+  page?: number;
+  size?: number;
+}>;
+
+export default async function Page({
+  searchParams,
+}: {
+  searchParams: PageSearchParams;
+}) {
+  const { page, size } = await searchParams;
+
+  const { contexts, pagination } = await getContexts({
+    page,
+    limit: size,
+  });
 
   return (
     <div className="flex flex-col gap-4">
@@ -39,9 +54,9 @@ export default async function Page() {
           </TableRow>
         </TableHeader>
 
-        {query.length ? (
+        {contexts.length ? (
           <TableBody>
-            {query.map((item) => (
+            {contexts.map((item) => (
               <TableRow key={item.id}>
                 <TableCell>{item.index}</TableCell>
 
@@ -69,6 +84,8 @@ export default async function Page() {
           </caption>
         )}
       </Table>
+
+      <Pagination pagination={pagination} />
     </div>
   );
 }

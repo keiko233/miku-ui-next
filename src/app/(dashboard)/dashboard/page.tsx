@@ -13,8 +13,22 @@ import { TableActions } from "./_modules/table-actions";
 
 export const dynamic = "force-dynamic";
 
-export default async function Page() {
-  const { devices, pagination } = await getDevices();
+type PageSearchParams = Promise<{
+  page?: number;
+  size?: number;
+}>;
+
+export default async function Page({
+  searchParams,
+}: {
+  searchParams: PageSearchParams;
+}) {
+  const { page, size } = await searchParams;
+
+  const { devices, pagination } = await getDevices({
+    page,
+    limit: size,
+  });
 
   return (
     <div className="flex flex-col gap-4">
