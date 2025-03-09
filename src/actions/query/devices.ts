@@ -1,6 +1,6 @@
 "use server";
 
-import { DEFAULT_PAGE_SIZE } from "@/consts";
+import { DEFAULT_CARD_PAGE_SIZE } from "@/consts";
 import { getKysely } from "@/lib/kysely";
 import { Device } from "@/schema";
 
@@ -16,7 +16,7 @@ export const getDevices = async (options?: {
 }) => {
   const kysely = await getKysely();
   const page = Number(options?.page) || 1;
-  const limit = Number(options?.limit) || DEFAULT_PAGE_SIZE;
+  const limit = Number(options?.limit) || DEFAULT_CARD_PAGE_SIZE;
   const offset = (page - 1) * limit;
 
   const [devices, totalCountResult] = await Promise.all([
