@@ -21,6 +21,14 @@ export default async function Layout({
           >
             Admin Dashboard
           </Link>
+
+          <a
+            className="text-on-surface-variant/30 hover:text-on-surface-variant text-sm hover:underline"
+            href="https://github.com/keiko233/miku-ui-next/"
+            target="_blank"
+          >
+            Source Code
+          </a>
         </div>
       </div>
     </Container>
