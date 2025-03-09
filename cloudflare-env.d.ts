@@ -3,6 +3,10 @@
 interface CloudflareEnv {
 	NEXT_CACHE_WORKERS_KV: KVNamespace;
 	NEXTJS_ENV: string;
+	BETTER_AUTH_SECRET: string;
+	BETTER_AUTH_URL: string;
+	BETTER_AUTH_GITHUB_ID: string;
+	BETTER_AUTH_GITHUB_SECRET: string;
 	DB: D1Database;
 	AI: Ai;
 	ASSETS: Fetcher;
