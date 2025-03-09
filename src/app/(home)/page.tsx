@@ -2,10 +2,21 @@ import { DeviceList } from "./_modules/device-list";
 
 export const dynamic = "force-dynamic";
 
-export default function Home() {
+type PageSearchParams = Promise<{
+  page?: number;
+  size?: number;
+}>;
+
+export default async function Home({
+  searchParams,
+}: {
+  searchParams: PageSearchParams;
+}) {
+  const { page, size } = await searchParams;
+
   return (
     <div className="mx-auto max-w-7xl">
-      <DeviceList />
+      <DeviceList page={page} limit={size} />
     </div>
   );
 }

@@ -1,5 +1,6 @@
 "use server";
 
+import { DEFAULT_PAGE_SIZE } from "@/consts";
 import { getKysely } from "@/lib/kysely";
 import { Device } from "@/schema";
 
@@ -8,19 +9,39 @@ import { Device } from "@/schema";
  *
  * This function queries the "Devices" table, selecting all columns
  * and ordering the results by the "publishAt" column in descending order.
- *
- * @async
- * @returns {Promise<Array<Device>>} A promise that resolves to an array of Device objects.
- * @throws {Error} If there's an issue connecting to the database or executing the query.
  */
-export const getDevices = async () => {
+export const getDevices = async (options?: {
+  page?: number;
+  limit?: number;
+}) => {
   const kysely = await getKysely();
+  const page = options?.page || 1;
+  const limit = options?.limit || DEFAULT_PAGE_SIZE;
+  const offset = (page - 1) * limit;
 
-  return await kysely
-    .selectFrom("Devices")
-    .selectAll()
-    .orderBy("publishAt", "desc")
-    .execute();
+  const [devices, totalCountResult] = await Promise.all([
+    kysely
+      .selectFrom("Devices")
+      .selectAll()
+      .orderBy("publishAt", "desc")
+      .limit(limit)
+      .offset(offset)
+      .execute(),
+    kysely
+      .selectFrom("Devices")
+      .select(({ fn }) => [fn.count("id").as("total")])
+      .executeTakeFirstOrThrow(),
+  ]);
+
+  return {
+    devices,
+    pagination: {
+      page,
+      limit,
+      total: Number(totalCountResult.total),
+      totalPages: Math.ceil(Number(totalCountResult.total) / limit),
+    },
+  };
 };
 
 export type CreateDeviceValues = Omit<Device, "id" | "createdAt" | "updatedAt">;
@@ -50,19 +71,17 @@ export const createDevice = async (
 
   if (unique?.version || unique?.codename) {
     // Build the query for checking existing devices
-    let query = kysely
-      .selectFrom("Devices")
-      .selectAll();
-    
+    let query = kysely.selectFrom("Devices").selectAll();
+
     // Add conditions based on unique constraints
     if (unique.version) {
       query = query.where("version", "=", values.version);
     }
-    
+
     if (unique.codename) {
       query = query.where("codename", "=", values.codename);
     }
-    
+
     const exist = await query.executeTakeFirst();
 
     if (exist) {
@@ -112,7 +131,7 @@ export const createDevice = async (
 
 /**
  * Deletes a device from the database by its ID.
- * 
+ *
  * @param id - The unique identifier of the device to delete
  * @returns A Promise that resolves when the device has been successfully deleted
  * @async

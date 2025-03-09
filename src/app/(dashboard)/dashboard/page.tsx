@@ -8,12 +8,13 @@ import {
   TableRow,
 } from "@libnyanpasu/material-design-react";
 import { getDevices } from "@/actions/query/devices";
+import { Pagination } from "@/components/pagination";
 import { TableActions } from "./_modules/table-actions";
 
 export const dynamic = "force-dynamic";
 
 export default async function Page() {
-  const query = await getDevices();
+  const { devices, pagination } = await getDevices();
 
   return (
     <div className="flex flex-col gap-4">
@@ -40,9 +41,9 @@ export default async function Page() {
           </TableRow>
         </TableHeader>
 
-        {query.length ? (
+        {devices.length ? (
           <TableBody>
-            {query.map((item) => (
+            {devices.map((item) => (
               <TableRow key={item.id}>
                 <TableCell className="truncate">{item.name}</TableCell>
 
@@ -74,6 +75,8 @@ export default async function Page() {
           </caption>
         )}
       </Table>
+
+      <Pagination pagination={pagination} />
     </div>
   );
 }
