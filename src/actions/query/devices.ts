@@ -15,8 +15,8 @@ export const getDevices = async (options?: {
   limit?: number;
 }) => {
   const kysely = await getKysely();
-  const page = options?.page || 1;
-  const limit = options?.limit || DEFAULT_PAGE_SIZE;
+  const page = Number(options?.page) || 1;
+  const limit = Number(options?.limit) || DEFAULT_PAGE_SIZE;
   const offset = (page - 1) * limit;
 
   const [devices, totalCountResult] = await Promise.all([
