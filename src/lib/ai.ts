@@ -30,7 +30,7 @@ The response must be a valid parseable JSON object according to the following sc
 {
   "codename": "string, device codename (e.g., 'odin'), force lowercase",
   "name": "string, device name (e.g., 'Xiaomi Mix 4'), dos not include the codename such as 'Xiaomi Mix 4 (odin)', must be 'Xiaomi Mix 4'",
-  "version": "string, ROM version (e.g., 'Vampire v0.6.1'), do not include 'Miku UI' or similar",
+  "version": "string, ROM version (e.g., 'Vampire v0.6.1'), DO NOT include 'Miku UI' prefix, return ONLY the version name like 'Vampire v0.6.1' without any UI branding",
   "androidVersion": number, Android version number (e.g., 15),
   "status": "string, either COMMUNITY or OFFICIAL",
   "selinuxStatus": "string, either Enforcing or Permissive",
@@ -45,7 +45,8 @@ ${content}
 
 IMPORTANT: 
 1. Your response must be ONLY the JSON object with no additional text. The JSON should be compressed to a single line without any line breaks or unnecessary whitespace.
-2. If you cannot extract valid information from the content that matches the schema, respond only with null and nothing else.`,
+2. If you cannot extract valid information from the content that matches the schema, respond only with null and nothing else.
+3. For the "version" field, NEVER include "Miku UI" or any UI brand name - extract only the version name itself (e.g., "Vampire v0.6.1").`,
       max_tokens: 1024,
       // fucking cloudflare workers AI JSON output was broken
       // response_format: {
