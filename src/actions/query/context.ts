@@ -22,6 +22,26 @@ export const getContexts = async () => {
 };
 
 /**
+ * Retrieves the most recent Context record from the database based on the specified field.
+ *
+ * @param {('index' | 'createdAt' | 'updatedAt')} by - The field to order by.
+ *   - 'index': Order by the index field.
+ *   - 'createdAt': Order by the creation timestamp.
+ *   - 'updatedAt': Order by the last update timestamp.
+ */
+export const getLastContext = async (
+  by: "index" | "createdAt" | "updatedAt",
+) => {
+  const kysely = await getKysely();
+
+  return await kysely
+    .selectFrom("Context")
+    .selectAll()
+    .orderBy(by, "desc")
+    .executeTakeFirst();
+};
+
+/**
  * Retrieves a context from the database by its index.
  * @async
  * @param {number} index - The index of the context to retrieve.
