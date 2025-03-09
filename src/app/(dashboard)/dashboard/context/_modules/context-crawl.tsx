@@ -14,6 +14,7 @@ import {
   ModalTrigger,
 } from "@libnyanpasu/material-design-react";
 import { useLockFn, useMemoizedFn } from "ahooks";
+import { revalidatePath } from "next/cache";
 import { useState, useTransition } from "react";
 import { executeCrawl } from "@/actions/task/context-crawl";
 import { getLastPostId } from "@/actions/telegram/post";
@@ -89,6 +90,7 @@ const ExecuteDialog = ({ from, to }: { from?: number; to?: number }) => {
     if (currentPostId === to) {
       setPending(false);
       setIsFinished(true);
+      revalidatePath("/");
       return;
     }
 
@@ -140,10 +142,16 @@ const ExecuteDialog = ({ from, to }: { from?: number; to?: number }) => {
               </span>
             )}
 
-            {taskIds.length &&
-              taskIds.map((id) => (
-                <MessagePolling key={id} taskId={id} onFinish={handleFinish} />
-              ))}
+            <div className="max-h-96 overflow-y-auto divide-y">
+              {taskIds.length &&
+                taskIds.map((id) => (
+                  <MessagePolling
+                    key={id}
+                    taskId={id}
+                    onFinish={handleFinish}
+                  />
+                ))}
+            </div>
           </CardContent>
 
           <CardFooter className="gap-1">
