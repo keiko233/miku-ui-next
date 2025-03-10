@@ -13,24 +13,32 @@ import { Device } from "@/schema";
 export const getDevices = async (options?: {
   page?: number;
   limit?: number;
+  codename?: string;
 }) => {
   const kysely = await getKysely();
   const page = Number(options?.page) || 1;
   const limit = Number(options?.limit) || DEFAULT_CARD_PAGE_SIZE;
   const offset = (page - 1) * limit;
 
+  // Build base queries
+  let devicesQuery = kysely
+    .selectFrom("Devices")
+    .selectAll()
+    .orderBy("publishAt", "desc");
+
+  let countQuery = kysely
+    .selectFrom("Devices")
+    .select(({ fn }) => [fn.count("id").as("total")]);
+
+  // Apply codename filter if provided
+  if (options?.codename) {
+    devicesQuery = devicesQuery.where("codename", "=", options.codename);
+    countQuery = countQuery.where("codename", "=", options.codename);
+  }
+
   const [devices, totalCountResult] = await Promise.all([
-    kysely
-      .selectFrom("Devices")
-      .selectAll()
-      .orderBy("publishAt", "desc")
-      .limit(limit)
-      .offset(offset)
-      .execute(),
-    kysely
-      .selectFrom("Devices")
-      .select(({ fn }) => [fn.count("id").as("total")])
-      .executeTakeFirstOrThrow(),
+    devicesQuery.limit(limit).offset(offset).execute(),
+    countQuery.executeTakeFirstOrThrow(),
   ]);
 
   return {
