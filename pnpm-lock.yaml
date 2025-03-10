@@ -71,7 +71,7 @@ importers:
         version: 4.4.1(prettier@3.5.3)
       '@opennextjs/cloudflare':
         specifier: ^0.5.8
-        version: 0.5.8(wrangler@3.114.0(@cloudflare/workers-types@4.20250303.0))
+        version: 0.5.9(wrangler@3.114.0(@cloudflare/workers-types@4.20250303.0))
       '@tailwindcss/postcss':
         specifier: ^4.0.11
         version: 4.0.11
@@ -1527,8 +1527,8 @@ packages:
     version: 3.4.2
     hasBin: true
 
-  '@opennextjs/cloudflare@0.5.8':
-    resolution: {integrity: sha512-lRp8Xz3i77Ec32SZ1kaOQ1JplZHCTfMNlCo/aWrC+TbdmaPSjo01oWI+fzphFgrg84bQ4A7LcrcxOEgyQMU8wg==}
+  '@opennextjs/cloudflare@0.5.9':
+    resolution: {integrity: sha512-1JHKLh6a5x1EtoBAm6u5uv6zje9YuFztRI/0Lr6n3xbEVQFrfxZ42e8gJzQLV6os/BTlryQa+ANSZH6srEiPlg==}
     hasBin: true
     peerDependencies:
       wrangler: ^3.111.0
@@ -5423,7 +5423,7 @@ snapshots:
       '@aws-crypto/sha256-js': 3.0.0
       '@aws-crypto/supports-web-crypto': 3.0.0
       '@aws-crypto/util': 3.0.0
-      '@aws-sdk/types': 3.734.0
+      '@aws-sdk/types': 3.398.0
       '@aws-sdk/util-locate-window': 3.723.0
       '@aws-sdk/util-utf8-browser': 3.259.0
       tslib: 1.14.1
@@ -5441,7 +5441,7 @@ snapshots:
   '@aws-crypto/sha256-js@3.0.0':
     dependencies:
       '@aws-crypto/util': 3.0.0
-      '@aws-sdk/types': 3.734.0
+      '@aws-sdk/types': 3.398.0
       tslib: 1.14.1
 
   '@aws-crypto/sha256-js@5.2.0':
@@ -5460,7 +5460,7 @@ snapshots:
 
   '@aws-crypto/util@3.0.0':
     dependencies:
-      '@aws-sdk/types': 3.734.0
+      '@aws-sdk/types': 3.398.0
       '@aws-sdk/util-utf8-browser': 3.259.0
       tslib: 1.14.1
 
@@ -7225,7 +7225,7 @@ snapshots:
       - aws-crt
       - supports-color
 
-  '@opennextjs/cloudflare@0.5.8(wrangler@3.114.0(@cloudflare/workers-types@4.20250303.0))':
+  '@opennextjs/cloudflare@0.5.9(wrangler@3.114.0(@cloudflare/workers-types@4.20250303.0))':
     dependencies:
       '@ast-grep/napi': 0.34.4
       '@dotenvx/dotenvx': 1.31.0
@@ -10771,7 +10771,7 @@ snapshots:
 
   send@1.1.0:
     dependencies:
-      debug: 4.4.0
+      debug: 4.3.6
       destroy: 1.2.0
       encodeurl: 2.0.0
       escape-html: 1.0.3
