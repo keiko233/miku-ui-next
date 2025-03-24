@@ -14,7 +14,6 @@ import {
   ModalTrigger,
 } from "@libnyanpasu/material-design-react";
 import { useLockFn, useMemoizedFn } from "ahooks";
-import { revalidatePath } from "next/cache";
 import { useState, useTransition } from "react";
 import { executeCrawl } from "@/actions/task/context-crawl";
 import { getLastPostId } from "@/actions/telegram/post";
@@ -90,7 +89,6 @@ const ExecuteDialog = ({ from, to }: { from?: number; to?: number }) => {
     if (currentPostId === to) {
       setPending(false);
       setIsFinished(true);
-      revalidatePath("/");
       return;
     }
 
