@@ -9,8 +9,10 @@
 		"start": "next start",
 		"lint": "next lint",
 		"test": "vitest",
-		"preview": "opennextjs-cloudflare && wrangler dev",
-		"deploy": "opennextjs-cloudflare && wrangler deploy",
+		"build:worker": "pnpm opennextjs-cloudflare build",
+		"preview:worker": "pnpm opennextjs-cloudflare preview",
+		"preview": "pnpm build:worker && pnpm preview:worker",
+		"deploy": "pnpm build:worker && wrangler deploy",
 		"cf-typegen": "wrangler types --env-interface CloudflareEnv cloudflare-env.d.ts",
 		"prepare:d1": "tsx d1-prepare.ts",
 		"prepare": "husky && pnpm prepare:d1"

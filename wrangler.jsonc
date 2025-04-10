@@ -17,12 +17,6 @@
   "placement": {
     "mode": "smart"
   },
-  "kv_namespaces": [
-    {
-      "binding": "NEXT_CACHE_WORKERS_KV",
-      "id": "f3c360f8c13643359594cf8dcb4d5516"
-    }
-  ],
   "d1_databases": [
     {
       "binding": "DB",
