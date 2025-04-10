@@ -17,7 +17,7 @@
 	},
 	"dependencies": {
 		"@iconify-json/material-symbols": "^1.2.15",
-		"@libnyanpasu/material-design-libs": "^0.1.4",
+		"@libnyanpasu/material-design-libs": "^0.2.0",
 		"@libnyanpasu/material-design-react": "^0.1.4",
 		"@libnyanpasu/material-design-tailwind": "^0.1.4",
 		"@svgr/core": "^8.1.0",
