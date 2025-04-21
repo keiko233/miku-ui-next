@@ -13,7 +13,7 @@ importers:
         version: 1.2.18
       '@libnyanpasu/material-design-libs':
         specifier: ^0.2.3
-        version: 0.2.3(@material/material-color-utilities@0.3.0)(class-variance-authority@0.7.1)(clsx@2.1.1)(lodash-es@4.17.21)(tailwind-merge@3.2.0)
+        version: 0.2.4(@material/material-color-utilities@0.3.0)(class-variance-authority@0.7.1)(clsx@2.1.1)(lodash-es@4.17.21)(tailwind-merge@3.2.0)
       '@libnyanpasu/material-design-react':
         specifier: ^0.2.3
         version: 0.2.4(@material/material-color-utilities@0.3.0)(@types/react-dom@19.1.2(@types/react@19.1.0))(@types/react@19.1.0)(class-variance-authority@0.7.1)(clsx@2.1.1)(framer-motion@12.6.3(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(lodash-es@4.17.21)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(tailwind-merge@3.2.0)
@@ -1384,15 +1384,6 @@ packages:
 
   '@libnyanpasu/material-design-components@0.2.4':
     resolution: {integrity: sha512-PBovZWe4z76aCvv0nYxzuOJQfIwKNPCyZpPwV9zz9NvgJ2+YXKkE6Xu9/eJHFOIDM1AIzlaQEZyc8R2R9/I1Ww==}
-
-  '@libnyanpasu/material-design-libs@0.2.3':
-    resolution: {integrity: sha512-z/ZfpF4jKtw9oovxoEpd811zY6vFJKh1CKt7i7FnFjMF+7g5ubO9xhhdZIvam5SOcTROa9FHASgnI7s5DyO+sA==}
-    peerDependencies:
-      '@material/material-color-utilities': '*'
-      class-variance-authority: '*'
-      clsx: '*'
-      lodash-es: '*'
-      tailwind-merge: '*'
 
   '@libnyanpasu/material-design-libs@0.2.4':
     resolution: {integrity: sha512-LOJrF5tO8r3BamnDc7vAdxdVOioqWEFia/H2kxQYO0s1DT0PknDyqka/ReGlQUzm2wgVIC4yZLEmmMSxsisIIg==}
@@ -5477,7 +5468,7 @@ snapshots:
       '@aws-crypto/sha256-js': 3.0.0
       '@aws-crypto/supports-web-crypto': 3.0.0
       '@aws-crypto/util': 3.0.0
-      '@aws-sdk/types': 3.775.0
+      '@aws-sdk/types': 3.398.0
       '@aws-sdk/util-locate-window': 3.723.0
       '@aws-sdk/util-utf8-browser': 3.259.0
       tslib: 1.14.1
@@ -5495,7 +5486,7 @@ snapshots:
   '@aws-crypto/sha256-js@3.0.0':
     dependencies:
       '@aws-crypto/util': 3.0.0
-      '@aws-sdk/types': 3.775.0
+      '@aws-sdk/types': 3.398.0
       tslib: 1.14.1
 
   '@aws-crypto/sha256-js@5.2.0':
@@ -5514,7 +5505,7 @@ snapshots:
 
   '@aws-crypto/util@3.0.0':
     dependencies:
-      '@aws-sdk/types': 3.775.0
+      '@aws-sdk/types': 3.398.0
       '@aws-sdk/util-utf8-browser': 3.259.0
       tslib: 1.14.1
 
@@ -7175,14 +7166,6 @@ snapshots:
       - clsx
       - lodash-es
       - tailwind-merge
-
-  '@libnyanpasu/material-design-libs@0.2.3(@material/material-color-utilities@0.3.0)(class-variance-authority@0.7.1)(clsx@2.1.1)(lodash-es@4.17.21)(tailwind-merge@3.2.0)':
-    dependencies:
-      '@material/material-color-utilities': 0.3.0
-      class-variance-authority: 0.7.1
-      clsx: 2.1.1
-      lodash-es: 4.17.21
-      tailwind-merge: 3.2.0
 
   '@libnyanpasu/material-design-libs@0.2.4(@material/material-color-utilities@0.3.0)(class-variance-authority@0.7.1)(clsx@2.1.1)(lodash-es@4.17.21)(tailwind-merge@3.2.0)':
     dependencies:
@@ -10869,7 +10852,7 @@ snapshots:
 
   send@1.2.0:
     dependencies:
-      debug: 4.4.0
+      debug: 4.3.6
       encodeurl: 2.0.0
       escape-html: 1.0.3
       etag: 1.8.1
