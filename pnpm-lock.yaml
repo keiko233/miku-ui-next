@@ -10,7 +10,7 @@ importers:
     dependencies:
       '@iconify-json/material-symbols':
         specifier: ^1.2.15
-        version: 1.2.18
+        version: 1.2.20
       '@libnyanpasu/material-design-libs':
         specifier: ^0.2.3
         version: 0.2.3(@material/material-color-utilities@0.3.0)(class-variance-authority@0.7.1)(clsx@2.1.1)(lodash-es@4.17.21)(tailwind-merge@3.2.0)
@@ -1277,8 +1277,8 @@ packages:
       '@vue/compiler-sfc':
         optional: true
 
-  '@iconify-json/material-symbols@1.2.18':
-    resolution: {integrity: sha512-Me3TNX5S+NvhOyVVdiXeop5ZPaxWRD/nraF3yJkYjgeUY4AOGpDd+uh+O/4pKPmVEq6Md4XjrdvgBoAhDKU/HQ==}
+  '@iconify-json/material-symbols@1.2.20':
+    resolution: {integrity: sha512-+KqOT+3fD+LC2FbWiV8gd4+JLMiVUtmqrjzpKN1ji7rfMQTwvYJ94RT0WQlmL+vfDNJ5MTRe3rBzzJyvIH/aSg==}
 
   '@iconify/types@2.0.0':
     resolution: {integrity: sha512-+wluvCrRhXrhyOmRDJ3q8mux9JkKy5SJ/v8ol2tu4FVjyYvtEzkc/3pK15ET6RKg4b4w4BmTk1+gsCUhf21Ykg==}
@@ -4249,11 +4249,11 @@ packages:
   mnemonist@0.38.3:
     resolution: {integrity: sha512-2K9QYubXx/NAjv4VLq1d1Ly8pWNC5L3BrixtdkyTegXWJIqY+zLNDhhX/A+ZwWt70tB1S8H4BE8FLYEFyNoOBw==}
 
-  motion-dom@12.6.5:
-    resolution: {integrity: sha512-jpM9TQLXzYMWMJ7Ec7sAj0iis8oIuu6WvjI3yNKJLdrZyrsI/b2cRInDVL8dCl683zQQq19DpL9cSMP+k8T1NA==}
+  motion-dom@12.7.4:
+    resolution: {integrity: sha512-1ZUHAoSUMMxP6jPqyxlk9XUfb6NxMsnWPnH2YGhrOhTURLcXWbETi6eemoKb60Pe32NVJYduL4B62VQSO5Jq8Q==}
 
-  motion-utils@12.6.5:
-    resolution: {integrity: sha512-IsOeKsOF+FWBhxQEDFBO6ZYC8/jlidmVbbLpe9/lXSA9j9kzGIMUuIBx2SZY+0reAS0DjZZ1i7dJp4NHrjocPw==}
+  motion-utils@12.7.2:
+    resolution: {integrity: sha512-XhZwqctxyJs89oX00zn3OGCuIIpVevbTa+u82usWBC6pSHUd2AoNWiYa7Du8tJxJy9TFbZ82pcn5t7NOm1PHAw==}
 
   ms@2.1.2:
     resolution: {integrity: sha512-sGkPx+VjMtmA6MX27oA4FBFELFCZZ4S4XqeGOXCv68tT+jb3vk/RyaKWP0PTKyWtmLSM0b+adUTEvbs1PEaH2w==}
@@ -7060,7 +7060,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@iconify-json/material-symbols@1.2.18':
+  '@iconify-json/material-symbols@1.2.20':
     dependencies:
       '@iconify/types': 2.0.0
 
@@ -9807,8 +9807,8 @@ snapshots:
 
   framer-motion@12.6.3(react-dom@19.1.0(react@19.1.0))(react@19.1.0):
     dependencies:
-      motion-dom: 12.6.5
-      motion-utils: 12.6.5
+      motion-dom: 12.7.4
+      motion-utils: 12.7.2
       tslib: 2.8.1
     optionalDependencies:
       react: 19.1.0
@@ -10448,11 +10448,11 @@ snapshots:
     dependencies:
       obliterator: 1.6.1
 
-  motion-dom@12.6.5:
+  motion-dom@12.7.4:
     dependencies:
-      motion-utils: 12.6.5
+      motion-utils: 12.7.2
 
-  motion-utils@12.6.5: {}
+  motion-utils@12.7.2: {}
 
   ms@2.1.2: {}
 
