@@ -36,8 +36,8 @@ importers:
         specifier: ^0.27.6
         version: 0.27.6
       kysely-d1:
-        specifier: ^0.3.0
-        version: 0.3.0(kysely@0.27.6)
+        specifier: ^0.4.0
+        version: 0.4.0(kysely@0.27.6)
       next:
         specifier: 15.3.2
         version: 15.3.2(@babel/core@7.26.10)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
@@ -4012,8 +4012,8 @@ packages:
   kolorist@1.8.0:
     resolution: {integrity: sha512-Y+60/zizpJ3HRH8DCss+q95yr6145JXZo46OTpFvDZWLfRCE4qChOyk1b26nMaNpfHHgxagk9dXT5OP0Tfe+dQ==}
 
-  kysely-d1@0.3.0:
-    resolution: {integrity: sha512-9wTbE6ooLiYtBa4wPg9e4fjfcmvRtgE/2j9pAjYrIq+iz+EsH/Hj9YbtxpEXA6JoRgfulVQ1EtGj6aycGGRpYw==}
+  kysely-d1@0.4.0:
+    resolution: {integrity: sha512-wUcVvQNtm30OTfuo7Ad5vYJ1qHqPXOCZc+zWchVKNyuvqY3u8OuGw4gmUx1Ypdx2wRVFLHVQC9I7v0pTmF7Nkw==}
     peerDependencies:
       kysely: '*'
 
@@ -10307,7 +10307,7 @@ snapshots:
 
   kolorist@1.8.0: {}
 
-  kysely-d1@0.3.0(kysely@0.27.6):
+  kysely-d1@0.4.0(kysely@0.27.6):
     dependencies:
       kysely: 0.27.6
 
