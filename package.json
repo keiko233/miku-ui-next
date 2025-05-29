@@ -27,7 +27,7 @@
 		"ahooks": "^3.8.4",
 		"better-auth": "^1.2.3",
 		"kysely": "^0.27.6",
-		"kysely-d1": "^0.3.0",
+		"kysely-d1": "^0.4.0",
 		"next": "15.3.2",
 		"react": "^19.0.0",
 		"react-dom": "^19.0.0",
