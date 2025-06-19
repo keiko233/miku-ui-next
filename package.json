@@ -19,9 +19,9 @@
 	},
 	"dependencies": {
 		"@iconify-json/material-symbols": "^1.2.15",
-		"@libnyanpasu/material-design-libs": "^0.2.3",
-		"@libnyanpasu/material-design-react": "^0.2.3",
-		"@libnyanpasu/material-design-tailwind": "^0.2.3",
+		"@libnyanpasu/material-design-libs": "^0.2.4",
+		"@libnyanpasu/material-design-react": "^0.2.4",
+		"@libnyanpasu/material-design-tailwind": "^0.2.4",
 		"@svgr/core": "^8.1.0",
 		"@svgr/plugin-jsx": "^8.1.0",
 		"ahooks": "^3.8.4",
@@ -35,7 +35,7 @@
 		"zod": "^3.24.2"
 	},
 	"devDependencies": {
-		"@cloudflare/workers-types": "^4.20250303.0",
+		"@cloudflare/workers-types": "^4.20250619.0",
 		"@commitlint/cli": "^19.8.0",
 		"@commitlint/config-conventional": "^19.8.0",
 		"@eslint/eslintrc": "^3.3.0",
