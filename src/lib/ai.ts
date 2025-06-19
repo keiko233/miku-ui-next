@@ -14,8 +14,8 @@ const ask = async (options: AiTextGenerationInput) => {
 
   // refence: https://developers.cloudflare.com/workers-ai/json-mode/#supported-models
   return await env.AI.run(
-    // "@cf/deepseek-ai/deepseek-r1-distill-qwen-32b",
-    "@cf/meta/llama-3.1-8b-instruct",
+    // "@cf/meta/llama-3.1-8b-instruct",
+    "@cf/deepseek-ai/deepseek-r1-distill-qwen-32b",
     options,
   );
 };
@@ -47,7 +47,7 @@ IMPORTANT:
 1. Your response must be ONLY the JSON object with no additional text. The JSON should be compressed to a single line without any line breaks or unnecessary whitespace.
 2. If you cannot extract valid information from the content that matches the schema, respond only with null and nothing else.
 3. For the "version" field, NEVER include "Miku UI" or any UI brand name - extract only the version name itself (e.g., "Vampire v0.6.1").`,
-      max_tokens: 1024,
+      // max_tokens: 1024,
       // fucking cloudflare workers AI JSON output was broken
       // response_format: {
       //   type: "json_object",
