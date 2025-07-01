@@ -1,8 +1,9 @@
+"use server";
+
 import { getCloudflareContext } from "@opennextjs/cloudflare";
 import { Kysely } from "kysely";
 import { D1Dialect } from "kysely-d1";
 import { Database } from "@/schema";
-import "server-only";
 
 let cachedKysely: Kysely<Database> | null = null;
 
