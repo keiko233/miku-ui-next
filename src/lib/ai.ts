@@ -9,13 +9,15 @@ const CreateDeviceValuesSchema = DeviceSchema.omit({
   updatedAt: true,
 });
 
-const ask = async (options: AiTextGenerationInput) => {
+const ask = async (
+  options: Ai_Cf_Meta_Llama_4_Scout_17B_16E_Instruct_Input,
+) => {
   const { env } = await getCloudflareContext({ async: true });
 
   // refence: https://developers.cloudflare.com/workers-ai/json-mode/#supported-models
   return await env.AI.run(
     // "@cf/meta/llama-3.1-8b-instruct",
-    "@cf/deepseek-ai/deepseek-r1-distill-qwen-32b",
+    "@cf/meta/llama-4-scout-17b-16e-instruct",
     options,
   );
 };
@@ -41,7 +43,9 @@ The response must be a valid parseable JSON object according to the following sc
 }
 
 Content to parse:
+<content>
 ${content}
+</content>
 
 IMPORTANT: 
 1. Your response must be ONLY the JSON object with no additional text. The JSON should be compressed to a single line without any line breaks or unnecessary whitespace.
@@ -111,6 +115,8 @@ IMPORTANT:
       //   },
       // },
     });
+
+    console.log(response);
 
     // cloudflare workers AI response broken too :)
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
