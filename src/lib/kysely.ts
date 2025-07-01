@@ -7,10 +7,17 @@ import { Database } from "@/schema";
 
 let cachedKysely: Kysely<Database> | null = null;
 
-export const getKysely = async () => {
-  const { env } = await getCloudflareContext({ async: true });
+export const getKysely = async (env?: CloudflareEnv) => {
+  let finalEnv: CloudflareEnv;
 
-  const dialect = new D1Dialect({ database: env.DB });
+  if (!env) {
+    const { env } = await getCloudflareContext({ async: true });
+    finalEnv = env;
+  } else {
+    finalEnv = env;
+  }
+
+  const dialect = new D1Dialect({ database: finalEnv.DB });
 
   if (cachedKysely) {
     return cachedKysely;

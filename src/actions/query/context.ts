@@ -53,8 +53,9 @@ export const getContexts = async (options?: {
  */
 export const getLastContext = async (
   by: "index" | "createdAt" | "updatedAt",
+  env?: CloudflareEnv,
 ) => {
-  const kysely = await getKysely();
+  const kysely = await getKysely(env);
 
   return await kysely
     .selectFrom("Context")

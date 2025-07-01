@@ -7,8 +7,8 @@ import { default as handler } from "./.open-next/worker.js";
 export default {
   fetch: handler.fetch,
 
-  async scheduled(event) {
-    const lastContext = await getLastContext("index");
+  async scheduled(event, env, ctx) {
+    const lastContext = await getLastContext("index", env);
 
     const lastPostId = await getLastPostId();
 
@@ -16,7 +16,7 @@ export default {
       for (let i = lastPostId; i < lastContext.index; i++) {
         const index = i + 1;
 
-        await executeCrawl(index);
+        await executeCrawl(index, env, ctx);
       }
     }
   },

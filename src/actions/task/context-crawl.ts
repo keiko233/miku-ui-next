@@ -81,11 +81,15 @@ async function execute(id: string, postId: number) {
   );
 }
 
-export async function executeCrawl(postId: number): Promise<{
+export async function executeCrawl(
+  postId: number,
+  env?: CloudflareEnv,
+  ctx?: ExecutionContext,
+): Promise<{
   message: string;
   taskId?: string;
 }> {
-  const existTask = await getPendingTaskByTitle(CRAWL_CONTEXT_TASK_TITLE);
+  const existTask = await getPendingTaskByTitle(CRAWL_CONTEXT_TASK_TITLE, env);
 
   if (existTask) {
     return {
@@ -96,19 +100,29 @@ export async function executeCrawl(postId: number): Promise<{
 
   const message = `Create crawl post ${postId} task successfully`;
 
-  const { id } = await createTaskByTitle(CRAWL_CONTEXT_TASK_TITLE, message);
+  const { id } = await createTaskByTitle(
+    CRAWL_CONTEXT_TASK_TITLE,
+    message,
+    env,
+  );
 
-  const { ctx } = await getCloudflareContext({ async: true });
+  let finalCtx: ExecutionContext;
+  if (!ctx) {
+    const { ctx } = await getCloudflareContext({ async: true });
+    finalCtx = ctx;
+  } else {
+    finalCtx = ctx;
+  }
 
-  ctx.waitUntil(
+  finalCtx.waitUntil(
     execute(id, postId)
       .then(async () => {
-        await updateTaskById(id, "Execution completed", TaskStatus.DONE);
+        await updateTaskById(id, "Execution completed", TaskStatus.DONE, env);
       })
       .catch(async (e) => {
         console.error(`Error in execute crawl task ${id}`, e);
 
-        await updateTaskById(id, formatError(e), TaskStatus.FAILED);
+        await updateTaskById(id, formatError(e), TaskStatus.FAILED, env);
       }),
   );
 
