@@ -9,17 +9,11 @@ const CreateDeviceValuesSchema = DeviceSchema.omit({
   updatedAt: true,
 });
 
-const ask = async (
-  options: Ai_Cf_Meta_Llama_4_Scout_17B_16E_Instruct_Input,
-) => {
+const ask = async (options: AiTextGenerationInput) => {
   const { env } = await getCloudflareContext({ async: true });
 
   // refence: https://developers.cloudflare.com/workers-ai/json-mode/#supported-models
-  return await env.AI.run(
-    // "@cf/meta/llama-3.1-8b-instruct",
-    "@cf/meta/llama-4-scout-17b-16e-instruct",
-    options,
-  );
+  return await env.AI.run("@cf/meta/llama-3.1-8b-instruct", options);
 };
 
 export const parsePostContent = async (
