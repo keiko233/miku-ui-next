@@ -63,7 +63,12 @@ export const TaskButton = async () => {
             {query.map((task) => (
               <div key={task.id} className="flex items-center justify-between">
                 <div>
-                  <p>{task.title}</p>
+                  <p className="flex items-center gap-1">
+                    <span>{task.title}</span>
+                    <code className="text-xs">
+                      {new Date(task.updatedAt).toLocaleString()}
+                    </code>
+                  </p>
                   <p>{task.content}</p>
                 </div>
 
