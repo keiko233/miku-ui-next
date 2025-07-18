@@ -8,8 +8,9 @@ export default {
   fetch: handler.fetch,
 
   async scheduled(event, env, ctx) {
-    // TODO: fetch scheduled api
-
+    await fetch("/api/scheduled", {
+      method: "POST",
+    });
   },
 } satisfies ExportedHandler<CloudflareEnv>;
 

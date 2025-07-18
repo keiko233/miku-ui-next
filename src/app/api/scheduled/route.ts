@@ -3,7 +3,7 @@ import { getLastContext } from "@/actions/query/context";
 import { executeCrawl } from "@/actions/task/context-crawl";
 import { getLastPostId } from "@/actions/telegram/post";
 
-export async function GET() {
+export async function POST() {
   // const { searchParams } = new URL(request.url);
   // const cron = searchParams.get("cron");
 
