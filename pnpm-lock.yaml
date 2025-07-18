@@ -37,10 +37,10 @@ importers:
         version: 12.23.3(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       kysely:
         specifier: ^0.28.0
-        version: 0.28.2
+        version: 0.28.3
       kysely-d1:
         specifier: ^0.4.0
-        version: 0.4.0(kysely@0.28.2)
+        version: 0.4.0(kysely@0.28.3)
       next:
         specifier: 15.3.5
         version: 15.3.5(@babel/core@7.26.10)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
@@ -2369,6 +2369,7 @@ packages:
   '@smithy/middleware-endpoint@4.1.14':
     resolution: {integrity: sha512-+BGLpK5D93gCcSEceaaYhUD/+OCGXM1IDaq/jKUQ+ujB0PTWlWN85noodKw/IPFZhIKFCNEe19PGd/reUMeLSQ==}
     engines: {node: '>=18.0.0'}
+    deprecated: Please upgrade to @smithy/middleware-endpoint@4.1.15 or higher to fix a bug preventing the resolution of ENV and config file custom endpoints https://github.com/smithy-lang/smithy-typescript/issues/1645
 
   '@smithy/middleware-retry@2.3.1':
     resolution: {integrity: sha512-P2bGufFpFdYcWvqpyqqmalRtwFUNUA8vHjJR5iGqbfR6mp65qKOLcUd6lTr4S9Gn/enynSrSf3p3FVgVAf6bXA==}
@@ -4344,9 +4345,9 @@ packages:
     peerDependencies:
       kysely: '*'
 
-  kysely@0.28.2:
-    resolution: {integrity: sha512-4YAVLoF0Sf0UTqlhgQMFU9iQECdah7n+13ANkiuVfRvlK+uI0Etbgd7bVP36dKlG+NXWbhGua8vnGt+sdhvT7A==}
-    engines: {node: '>=18.0.0'}
+  kysely@0.28.3:
+    resolution: {integrity: sha512-svKnkSH72APRdjfVCCOknxaC9Eb3nA2StHG9d5/sKOqRvHRp2Dtf1XwDvc92b4B5v6LV+EAGWXQbZ5jMOvHaDw==}
+    engines: {node: '>=20.0.0'}
 
   language-subtag-registry@0.3.23:
     resolution: {integrity: sha512-0K65Lea881pHotoGEa5gDlMxt3pctLi2RplBb7Ezh4rRdLEOtgi7n4EwK9lamnUCkKBqaeKRVebTq6BAxSkpXQ==}
@@ -9624,7 +9625,7 @@ snapshots:
       better-call: 1.0.9
       defu: 6.1.4
       jose: 6.0.11
-      kysely: 0.28.2
+      kysely: 0.28.3
       nanostores: 0.11.4
       zod: 3.25.76
 
@@ -11002,11 +11003,11 @@ snapshots:
 
   kolorist@1.8.0: {}
 
-  kysely-d1@0.4.0(kysely@0.28.2):
+  kysely-d1@0.4.0(kysely@0.28.3):
     dependencies:
-      kysely: 0.28.2
+      kysely: 0.28.3
 
-  kysely@0.28.2: {}
+  kysely@0.28.3: {}
 
   language-subtag-registry@0.3.23: {}
 
