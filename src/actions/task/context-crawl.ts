@@ -83,48 +83,53 @@ async function execute(id: string, postId: number) {
 
 export async function executeCrawl(
   postId: number,
-  env?: CloudflareEnv,
-  ctx?: ExecutionContext,
+  options: {
+    disableWaitUntil?: boolean;
+    force?: boolean;
+  } = {},
 ): Promise<{
   message: string;
   taskId?: string;
 }> {
-  const existTask = await getPendingTaskByTitle(CRAWL_CONTEXT_TASK_TITLE, env);
+  if (!options.force) {
+    const existTask = await getPendingTaskByTitle(CRAWL_CONTEXT_TASK_TITLE);
 
-  if (existTask) {
-    return {
-      message: "Crawl task is already in progress",
-      taskId: existTask.id,
-    };
+    if (existTask) {
+      return {
+        message: "Crawl task is already in progress",
+        taskId: existTask.id,
+      };
+    }
   }
 
   const message = `Create crawl post ${postId} task successfully`;
 
-  const { id } = await createTaskByTitle(
-    CRAWL_CONTEXT_TASK_TITLE,
-    message,
-    env,
-  );
+  const { id } = await createTaskByTitle(CRAWL_CONTEXT_TASK_TITLE, message);
 
-  let finalCtx: ExecutionContext;
-  if (!ctx) {
-    const { ctx } = await getCloudflareContext({ async: true });
-    finalCtx = ctx;
+  const { ctx } = await getCloudflareContext({ async: true });
+
+  if (!options.disableWaitUntil) {
+    ctx.waitUntil(
+      execute(id, postId)
+        .then(async () => {
+          await updateTaskById(id, "Execution completed", TaskStatus.DONE);
+        })
+        .catch(async (e) => {
+          console.error(`Error in execute crawl task ${id}`, e);
+
+          await updateTaskById(id, formatError(e), TaskStatus.FAILED);
+        }),
+    );
   } else {
-    finalCtx = ctx;
+    await execute(id, postId);
+
+    await updateTaskById(id, "Execution completed", TaskStatus.DONE);
+
+    return {
+      message: "Execution completed",
+      taskId: id,
+    };
   }
-
-  finalCtx.waitUntil(
-    execute(id, postId)
-      .then(async () => {
-        await updateTaskById(id, "Execution completed", TaskStatus.DONE, env);
-      })
-      .catch(async (e) => {
-        console.error(`Error in execute crawl task ${id}`, e);
-
-        await updateTaskById(id, formatError(e), TaskStatus.FAILED, env);
-      }),
-  );
 
   return {
     message,

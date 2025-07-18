@@ -28,11 +28,8 @@ export const getTaskById = async (id: string, env?: CloudflareEnv) => {
  * @param title - The title of the task to search for
  * @returns A Promise that resolves to the first matching task or undefined if none is found
  */
-export const getPendingTaskByTitle = async (
-  title: string,
-  env?: CloudflareEnv,
-) => {
-  const kysely = await getKysely(env);
+export const getPendingTaskByTitle = async (title: string) => {
+  const kysely = await getKysely();
 
   return await kysely
     .selectFrom("Tasks")
@@ -59,9 +56,8 @@ export const updateTaskById = async (
   id: string,
   content?: string,
   status: TaskStatus = TaskStatus.DOING,
-  env?: CloudflareEnv,
 ) => {
-  const kysely = await getKysely(env);
+  const kysely = await getKysely();
 
   // If there's content to append, get the existing content first
   if (content) {
@@ -97,8 +93,8 @@ export const updateTaskById = async (
  * @returns A Promise that resolves to an array of Task objects
  * @async
  */
-export const getTasksWithLimit = async (limit: number, env?: CloudflareEnv) => {
-  const kysely = await getKysely(env);
+export const getTasksWithLimit = async (limit: number) => {
+  const kysely = await getKysely();
 
   const tasks = await kysely
     .selectFrom("Tasks")
@@ -122,12 +118,8 @@ export const getTasksWithLimit = async (limit: number, env?: CloudflareEnv) => {
  * @returns An object containing the generated UUID and the content of the created task
  * @throws Error if the database operation fails
  */
-export const createTaskByTitle = async (
-  title: string,
-  content?: string,
-  env?: CloudflareEnv,
-) => {
-  const kysely = await getKysely(env);
+export const createTaskByTitle = async (title: string, content?: string) => {
+  const kysely = await getKysely();
 
   const id = crypto.randomUUID();
 

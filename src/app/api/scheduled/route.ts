@@ -11,15 +11,35 @@ export async function POST() {
 
   const lastPostId = await getLastPostId();
 
-  if (lastPostId && lastContext?.index && lastContext.index !== lastPostId) {
-    for (let i = lastPostId; i < lastContext.index; i++) {
-      const index = i + 1;
+  const shouldCrawl =
+    lastPostId && lastContext?.index && lastContext.index !== lastPostId;
 
-      await executeCrawl(index);
+  const results: { message: string; taskId?: string }[] = [];
+
+  if (shouldCrawl) {
+    for (let i = lastContext.index; i < 560; i++) {
+      const index = i + 1;
+      const result = await executeCrawl(index, {
+        disableWaitUntil: true,
+        force: true,
+      });
+      results.push(result);
     }
   }
 
-  return new NextResponse("", {
-    status: 200,
-  });
+  return new NextResponse(
+    JSON.stringify({
+      lastContext: lastContext?.index,
+      lastPostId,
+      shouldCrawl,
+      results,
+      length: results.length,
+    }),
+    {
+      status: 200,
+      headers: {
+        "Content-Type": "application/json",
+      },
+    },
+  );
 }
