@@ -20,6 +20,15 @@ const nextConfig: NextConfig = {
 
     return config;
   },
+
+  async rewrites() {
+    return [
+      {
+        source: "/__scheduled",
+        destination: "/api/scheduled",
+      },
+    ];
+  },
 };
 
 export default nextConfig;

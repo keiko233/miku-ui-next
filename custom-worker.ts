@@ -8,17 +8,8 @@ export default {
   fetch: handler.fetch,
 
   async scheduled(event, env, ctx) {
-    const lastContext = await getLastContext("index", env);
+    // TODO: fetch scheduled api
 
-    const lastPostId = await getLastPostId();
-
-    if (lastPostId && lastContext?.index && lastContext.index !== lastPostId) {
-      for (let i = lastPostId; i < lastContext.index; i++) {
-        const index = i + 1;
-
-        await executeCrawl(index, env, ctx);
-      }
-    }
   },
 } satisfies ExportedHandler<CloudflareEnv>;
 
