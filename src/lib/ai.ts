@@ -13,7 +13,7 @@ const ask = async (options: AiTextGenerationInput) => {
   const { env } = await getCloudflareContext({ async: true });
 
   // refence: https://developers.cloudflare.com/workers-ai/json-mode/#supported-models
-  return await env.AI.run("@cf/meta/llama-3.1-8b-instruct", options);
+  return await env.AI.run("@cf/meta/llama-3.1-8b-instruct-fp8", options);
 };
 
 export const parsePostContent = async (
@@ -41,7 +41,7 @@ Content to parse:
 ${content}
 </content>
 
-IMPORTANT: 
+IMPORTANT:
 1. Your response must be ONLY the JSON object with no additional text. The JSON should be compressed to a single line without any line breaks or unnecessary whitespace.
 2. If you cannot extract valid information from the content that matches the schema, respond only with null and nothing else.
 3. For the "version" field, NEVER include "Miku UI" or any UI brand name - extract only the version name itself (e.g., "Vampire v0.6.1").`,
