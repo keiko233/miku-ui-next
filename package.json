@@ -63,7 +63,7 @@
 		"typescript": "^5.8.2",
 		"unplugin-icons": "^22.1.0",
 		"vite-tsconfig-paths": "^5.1.4",
-		"vitest": "^3.0.8",
+		"vitest": "^4.0.0",
 		"wrangler": "^4.22.0"
 	},
 	"engines": {
