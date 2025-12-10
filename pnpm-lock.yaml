@@ -16,7 +16,7 @@ importers:
         version: 0.2.4(@material/material-color-utilities@0.3.0)(class-variance-authority@0.7.1)(clsx@2.1.1)(lodash-es@4.17.21)(tailwind-merge@3.4.0)
       '@libnyanpasu/material-design-react':
         specifier: ^0.2.4
-        version: 0.2.4(@material/material-color-utilities@0.3.0)(@types/react-dom@19.2.3(@types/react@19.2.7))(@types/react@19.2.7)(class-variance-authority@0.7.1)(clsx@2.1.1)(framer-motion@12.23.25(react-dom@19.2.1(react@19.2.1))(react@19.2.1))(lodash-es@4.17.21)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(tailwind-merge@3.4.0)
+        version: 0.2.4(@material/material-color-utilities@0.3.0)(@types/react-dom@19.2.3(@types/react@19.2.7))(@types/react@19.2.7)(class-variance-authority@0.7.1)(clsx@2.1.1)(framer-motion@12.23.26(react-dom@19.2.1(react@19.2.1))(react@19.2.1))(lodash-es@4.17.21)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(tailwind-merge@3.4.0)
       '@libnyanpasu/material-design-tailwind':
         specifier: ^0.2.4
         version: 0.2.4
@@ -34,7 +34,7 @@ importers:
         version: 1.4.6(next@15.5.7(@babel/core@7.28.5)(react-dom@19.2.1(react@19.2.1))(react@19.2.1))(react-dom@19.2.1(react@19.2.1))(react@19.2.1)
       framer-motion:
         specifier: ^12.18.1
-        version: 12.23.25(react-dom@19.2.1(react@19.2.1))(react@19.2.1)
+        version: 12.23.26(react-dom@19.2.1(react@19.2.1))(react@19.2.1)
       kysely:
         specifier: ^0.28.0
         version: 0.28.8
@@ -4047,8 +4047,8 @@ packages:
   fraction.js@5.3.4:
     resolution: {integrity: sha512-1X1NTtiJphryn/uLQz3whtY6jK3fTqoE3ohKs0tT+Ujr1W59oopxmoEh7Lu5p6vBaPbgoM0bzveAW4Qi5RyWDQ==}
 
-  framer-motion@12.23.25:
-    resolution: {integrity: sha512-gUHGl2e4VG66jOcH0JHhuJQr6ZNwrET9g31ZG0xdXzT0CznP7fHX4P8Bcvuc4MiUB90ysNnWX2ukHRIggkl6hQ==}
+  framer-motion@12.23.26:
+    resolution: {integrity: sha512-cPcIhgR42xBn1Uj+PzOyheMtZ73H927+uWPDVhUMqxy8UHt6Okavb6xIz9J/phFUHUj0OncR6UvMfJTXoc/LKA==}
     peerDependencies:
       '@emotion/is-prop-valid': '*'
       react: ^18.0.0 || ^19.0.0
@@ -7982,7 +7982,7 @@ snapshots:
       lodash-es: 4.17.21
       tailwind-merge: 3.4.0
 
-  '@libnyanpasu/material-design-react@0.2.4(@material/material-color-utilities@0.3.0)(@types/react-dom@19.2.3(@types/react@19.2.7))(@types/react@19.2.7)(class-variance-authority@0.7.1)(clsx@2.1.1)(framer-motion@12.23.25(react-dom@19.2.1(react@19.2.1))(react@19.2.1))(lodash-es@4.17.21)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(tailwind-merge@3.4.0)':
+  '@libnyanpasu/material-design-react@0.2.4(@material/material-color-utilities@0.3.0)(@types/react-dom@19.2.3(@types/react@19.2.7))(@types/react@19.2.7)(class-variance-authority@0.7.1)(clsx@2.1.1)(framer-motion@12.23.26(react-dom@19.2.1(react@19.2.1))(react@19.2.1))(lodash-es@4.17.21)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(tailwind-merge@3.4.0)':
     dependencies:
       '@libnyanpasu/material-design-components': 0.2.4(@material/material-color-utilities@0.3.0)(class-variance-authority@0.7.1)(clsx@2.1.1)(lodash-es@4.17.21)(tailwind-merge@3.4.0)
       '@libnyanpasu/material-design-libs': 0.2.4(@material/material-color-utilities@0.3.0)(class-variance-authority@0.7.1)(clsx@2.1.1)(lodash-es@4.17.21)(tailwind-merge@3.4.0)
@@ -7992,7 +7992,7 @@ snapshots:
       '@radix-ui/react-slot': 1.2.4(@types/react@19.2.7)(react@19.2.1)
       '@radix-ui/react-switch': 1.2.6(@types/react-dom@19.2.3(@types/react@19.2.7))(@types/react@19.2.7)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)
       ahooks: 3.9.6(react-dom@19.2.1(react@19.2.1))(react@19.2.1)
-      framer-motion: 12.23.25(react-dom@19.2.1(react@19.2.1))(react@19.2.1)
+      framer-motion: 12.23.26(react-dom@19.2.1(react@19.2.1))(react@19.2.1)
       react: 19.2.1
       react-dom: 19.2.1(react@19.2.1)
     transitivePeerDependencies:
@@ -10696,7 +10696,7 @@ snapshots:
 
   fraction.js@5.3.4: {}
 
-  framer-motion@12.23.25(react-dom@19.2.1(react@19.2.1))(react@19.2.1):
+  framer-motion@12.23.26(react-dom@19.2.1(react@19.2.1))(react@19.2.1):
     dependencies:
       motion-dom: 12.23.23
       motion-utils: 12.23.6
