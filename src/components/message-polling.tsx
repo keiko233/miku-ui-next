@@ -15,19 +15,23 @@ export const MessagePolling = ({
   intervalTime?: number;
 }) => {
   const [message, setMessage] = useState<string>();
+  const [shouldStop, setShouldStop] = useState(false);
 
-  const clearInterval = useInterval(async () => {
-    const res = await getTaskById(taskId);
+  const clearInterval = useInterval(
+    async () => {
+      const res = await getTaskById(taskId);
 
-    if (res?.content) {
-      setMessage(res.content);
-    }
+      if (res?.content) {
+        setMessage(res.content);
+      }
 
-    if (res?.status !== TaskStatus.DOING) {
-      clearInterval();
-      onFinish?.();
-    }
-  }, intervalTime ?? 3000);
+      if (res?.status !== TaskStatus.DOING) {
+        setShouldStop(true);
+        onFinish?.();
+      }
+    },
+    shouldStop ? undefined : intervalTime ?? 3000,
+  );
 
   return <p className="whitespace-pre-line font-mono">{message}</p>;
 };

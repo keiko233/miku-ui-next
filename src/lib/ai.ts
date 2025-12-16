@@ -113,7 +113,7 @@ IMPORTANT:
     console.log(response);
 
     // cloudflare workers AI response broken too :)
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+     
     let cleanedResponse = (response as any).response;
 
     if (cleanedResponse.startsWith('"') && cleanedResponse.endsWith('"')) {

@@ -69,10 +69,10 @@ export async function fetchWithRetry(
         return true;
       }
 
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+       
       if (error instanceof Response || (error as any).status) {
         const status =
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+           
           error instanceof Response ? error.status : (error as any).status;
         // Only retry on server errors (5xx)
         return status >= 500 && status < 600;
