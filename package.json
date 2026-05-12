@@ -61,7 +61,7 @@
 		"tailwindcss": "^4.0.11",
 		"tsx": "^4.19.3",
 		"typescript": "^5.8.2",
-		"unplugin-icons": "^22.1.0",
+		"unplugin-icons": "^23.0.0",
 		"vite-tsconfig-paths": "^6.0.0",
 		"vitest": "^4.0.0",
 		"wrangler": "^4.22.0"
