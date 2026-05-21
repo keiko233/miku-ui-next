@@ -16,7 +16,7 @@ importers:
         version: 0.2.4(@material/material-color-utilities@0.3.0)(class-variance-authority@0.7.1)(clsx@2.1.1)(lodash-es@4.17.21)(tailwind-merge@3.4.0)
       '@libnyanpasu/material-design-react':
         specifier: ^0.2.4
-        version: 0.2.4(@material/material-color-utilities@0.3.0)(@types/react-dom@19.2.3(@types/react@19.2.13))(@types/react@19.2.13)(class-variance-authority@0.7.1)(clsx@2.1.1)(framer-motion@12.26.2(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(lodash-es@4.17.21)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(tailwind-merge@3.4.0)
+        version: 0.2.4(@material/material-color-utilities@0.3.0)(@types/react-dom@19.2.3(@types/react@19.2.13))(@types/react@19.2.13)(class-variance-authority@0.7.1)(clsx@2.1.1)(framer-motion@12.40.0(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(lodash-es@4.17.21)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(tailwind-merge@3.4.0)
       '@libnyanpasu/material-design-tailwind':
         specifier: ^0.2.4
         version: 0.2.4
@@ -34,7 +34,7 @@ importers:
         version: 1.4.14(next@16.1.3(@babel/core@7.28.5)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(vitest@4.0.17(@types/node@24.10.9)(jiti@2.6.1)(jsdom@27.4.0)(lightningcss@1.30.2)(terser@5.16.9)(tsx@4.21.0)(yaml@2.8.2))
       framer-motion:
         specifier: ^12.18.1
-        version: 12.26.2(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
+        version: 12.40.0(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       kysely:
         specifier: ^0.28.0
         version: 0.28.9
@@ -3985,8 +3985,8 @@ packages:
   fraction.js@5.3.4:
     resolution: {integrity: sha512-1X1NTtiJphryn/uLQz3whtY6jK3fTqoE3ohKs0tT+Ujr1W59oopxmoEh7Lu5p6vBaPbgoM0bzveAW4Qi5RyWDQ==}
 
-  framer-motion@12.26.2:
-    resolution: {integrity: sha512-lflOQEdjquUi9sCg5Y1LrsZDlsjrHw7m0T9Yedvnk7Bnhqfkc89/Uha10J3CFhkL+TCZVCRw9eUGyM/lyYhXQA==}
+  framer-motion@12.40.0:
+    resolution: {integrity: sha512-uaBd3qC1v3KQqBEjwTUd183K6PbS+j0yR9w9VmEOLWA/tnUcSn8Xa3uck7t4dgpDoUss8xQTcj8W2L07lrnLFg==}
     peerDependencies:
       '@emotion/is-prop-valid': '*'
       react: ^18.0.0 || ^19.0.0
@@ -4063,6 +4063,7 @@ packages:
   git-raw-commits@4.0.0:
     resolution: {integrity: sha512-ICsMM1Wk8xSGMowkOmPrzo2Fgmfo4bMHLNX6ytHjajRJUqvHOw/TFapQ+QG75c3X/tTDDhOSRPGC52dDbNM8FQ==}
     engines: {node: '>=16'}
+    deprecated: This package is no longer maintained. For the JavaScript API, please use @conventional-changelog/git-client instead.
     hasBin: true
 
   glob-parent@5.1.2:
@@ -4690,11 +4691,11 @@ packages:
   mnemonist@0.38.3:
     resolution: {integrity: sha512-2K9QYubXx/NAjv4VLq1d1Ly8pWNC5L3BrixtdkyTegXWJIqY+zLNDhhX/A+ZwWt70tB1S8H4BE8FLYEFyNoOBw==}
 
-  motion-dom@12.26.2:
-    resolution: {integrity: sha512-KLMT1BroY8oKNeliA3JMNJ+nbCIsTKg6hJpDb4jtRAJ7nCKnnpg/LTq/NGqG90Limitz3kdAnAVXecdFVGlWTw==}
+  motion-dom@12.40.0:
+    resolution: {integrity: sha512-HxU3ZaBwNPVQUBQf1xxgq+7JrPNZvjLVxgbpEZL7RrWJnsxOf0/OM+yrHG9ogLQ31Do/r57Oz2gQWPK+6q62mg==}
 
-  motion-utils@12.24.10:
-    resolution: {integrity: sha512-x5TFgkCIP4pPsRLpKoI86jv/q8t8FQOiM/0E8QKBzfMozWHfkKap2gA1hOki+B5g3IsBNpxbUnfOum1+dgvYww==}
+  motion-utils@12.39.0:
+    resolution: {integrity: sha512-8nadJAJjTtqRkmRF36FoJTrywK9nnFmnPwnSMyxaOCU7GDjN9RTMJIxx9De8ErM+vpPhMccr/6fo5WciyQLnMQ==}
 
   ms@2.1.3:
     resolution: {integrity: sha512-6FlzubTLZG3J2a/NVCAleEhjzq5oxgHyaCU9yYXvcLsvoVaHJq/s5xXI6/XXP6tz7R9xAOtHnSO/tXtF3WRTlA==}
@@ -5594,6 +5595,7 @@ packages:
 
   uuid@9.0.1:
     resolution: {integrity: sha512-b+1eJOlsR9K8HJpow9Ok3fiWOWSIcIzXodvv0rQjVoOVNpWMpxf1wZNpt4y9h10odCNrqnYp1OBzRktckBe3sA==}
+    deprecated: uuid@10 and below is no longer supported.  For ESM codebases, update to uuid@latest.  For CommonJS codebases, use uuid@11 (but be aware this version will likely be deprecated in 2028).
     hasBin: true
 
   vary@1.1.2:
@@ -7821,7 +7823,7 @@ snapshots:
       lodash-es: 4.17.21
       tailwind-merge: 3.4.0
 
-  '@libnyanpasu/material-design-react@0.2.4(@material/material-color-utilities@0.3.0)(@types/react-dom@19.2.3(@types/react@19.2.13))(@types/react@19.2.13)(class-variance-authority@0.7.1)(clsx@2.1.1)(framer-motion@12.26.2(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(lodash-es@4.17.21)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(tailwind-merge@3.4.0)':
+  '@libnyanpasu/material-design-react@0.2.4(@material/material-color-utilities@0.3.0)(@types/react-dom@19.2.3(@types/react@19.2.13))(@types/react@19.2.13)(class-variance-authority@0.7.1)(clsx@2.1.1)(framer-motion@12.40.0(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(lodash-es@4.17.21)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(tailwind-merge@3.4.0)':
     dependencies:
       '@libnyanpasu/material-design-components': 0.2.4(@material/material-color-utilities@0.3.0)(class-variance-authority@0.7.1)(clsx@2.1.1)(lodash-es@4.17.21)(tailwind-merge@3.4.0)
       '@libnyanpasu/material-design-libs': 0.2.4(@material/material-color-utilities@0.3.0)(class-variance-authority@0.7.1)(clsx@2.1.1)(lodash-es@4.17.21)(tailwind-merge@3.4.0)
@@ -7831,7 +7833,7 @@ snapshots:
       '@radix-ui/react-slot': 1.2.4(@types/react@19.2.13)(react@19.2.4)
       '@radix-ui/react-switch': 1.2.6(@types/react-dom@19.2.3(@types/react@19.2.13))(@types/react@19.2.13)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       ahooks: 3.9.6(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
-      framer-motion: 12.26.2(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
+      framer-motion: 12.40.0(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       react: 19.2.4
       react-dom: 19.2.4(react@19.2.4)
     transitivePeerDependencies:
@@ -10528,10 +10530,10 @@ snapshots:
 
   fraction.js@5.3.4: {}
 
-  framer-motion@12.26.2(react-dom@19.2.4(react@19.2.4))(react@19.2.4):
+  framer-motion@12.40.0(react-dom@19.2.4(react@19.2.4))(react@19.2.4):
     dependencies:
-      motion-dom: 12.26.2
-      motion-utils: 12.24.10
+      motion-dom: 12.40.0
+      motion-utils: 12.39.0
       tslib: 2.8.1
     optionalDependencies:
       react: 19.2.4
@@ -11174,11 +11176,11 @@ snapshots:
     dependencies:
       obliterator: 1.6.1
 
-  motion-dom@12.26.2:
+  motion-dom@12.40.0:
     dependencies:
-      motion-utils: 12.24.10
+      motion-utils: 12.39.0
 
-  motion-utils@12.24.10: {}
+  motion-utils@12.39.0: {}
 
   ms@2.1.3: {}
 
