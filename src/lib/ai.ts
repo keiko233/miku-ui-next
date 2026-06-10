@@ -1,4 +1,5 @@
 import { env } from "cloudflare:workers";
+import { z } from "zod";
 
 import { CreateDeviceValues } from "@/actions/query/devices";
 import { DeviceSchema } from "@/schema";
@@ -10,68 +11,114 @@ const CreateDeviceValuesSchema = DeviceSchema.omit({
   updatedAt: true,
 });
 
-const ask = async (options: { prompt: string }): Promise<{ response: string }> => {
-  // refence: https://developers.cloudflare.com/workers-ai/json-mode/#supported-models
-  const result = (await (
-    env.AI.run as unknown as (model: string, inputs: unknown) => Promise<unknown>
-  )("@cf/google/gemma-4-26b-a4b-it", options)) as { response: string };
-  return result;
+const CreateDeviceValuesJsonSchema = z.toJSONSchema(CreateDeviceValuesSchema, {
+  target: "draft-07",
+});
+
+const getResponsePayload = (response: unknown): unknown => {
+  if (typeof response === "string") {
+    return response;
+  }
+
+  if (!response || typeof response !== "object") {
+    return undefined;
+  }
+
+  if ("response" in response) {
+    return (response as { response?: unknown }).response;
+  }
+
+  return (response as { choices?: Array<{ message?: { content?: unknown } }> })
+    .choices?.[0]
+    ?.message?.content;
+};
+
+const parseJsonPayload = (payload: unknown): unknown => {
+  if (typeof payload !== "string") {
+    return payload;
+  }
+
+  const trimmedPayload = payload.trim();
+  if (trimmedPayload === "null") {
+    return null;
+  }
+
+  try {
+    return JSON.parse(trimmedPayload);
+  } catch (error) {
+    const fencedJson = trimmedPayload.match(
+      /^```(?:json)?\s*([\s\S]*?)\s*```$/i,
+    )?.[1];
+    if (!fencedJson) {
+      throw error;
+    }
+    return JSON.parse(fencedJson.trim());
+  }
 };
 
 export const parsePostContent = async (
   content: string,
 ): Promise<Omit<CreateDeviceValues, "publishAt"> | null> => {
   try {
-    const response = await ask({
-      prompt: `Extract device information from the following text and return it ONLY as a valid JSON object without any additional text, explanations, markdown backticks or formatting.
-The response must be a valid parseable JSON object according to the following schema and nothing else:
-{
-  "codename": "string, device codename (e.g., 'odin'), force lowercase",
-  "name": "string, device name (e.g., 'Xiaomi Mix 4'), dos not include the codename such as 'Xiaomi Mix 4 (odin)', must be 'Xiaomi Mix 4'",
-  "version": "string, ROM version (e.g., 'Vampire v0.6.1'), DO NOT include 'Miku UI' prefix, return ONLY the version name like 'Vampire v0.6.1' without any UI branding",
-  "androidVersion": number, Android version number (e.g., 15),
-  "status": "string, either COMMUNITY or OFFICIAL",
-  "selinuxStatus": "string, either Enforcing or Permissive",
-  "kernelsuVersion": number, KernelSU version number,
-  "sourcforgeUrl": "string, SourceForge download link",
-  "changelog": "string, update changelog content with \\n for line breaks, drop the extra - symbol",
-  "note": "string or null, additional notes (optional) with \\n for line breaks"
-}
-
-Content to parse:
+    const response = await env.AI.run("@cf/google/gemma-4-26b-a4b-it", {
+      messages: [
+        {
+          role: "system",
+          content:
+            `Extract device information from the following text and return only structured JSON that matches the provided response_format schema.
+Field rules:
+- codename: device codename, force lowercase.
+- name: device name; do not include the codename, for example "Xiaomi Mix 4 (odin)" must be "Xiaomi Mix 4".
+- version: ROM version only; never include "Miku UI" or any UI brand prefix.
+- androidVersion: Android version number.
+- status: either COMMUNITY or OFFICIAL.
+- selinuxStatus: either Enforcing or Permissive.
+- kernelsuVersion: KernelSU version number.
+- sourcforgeUrl: SourceForge download link. Keep this exact key spelling.
+- changelog: update changelog content with \\n for line breaks; drop extra "-" list symbols.
+- note: additional notes with \\n for line breaks, or null.`,
+        },
+        {
+          role: "user",
+          content: `Content to parse:
 <content>
 ${content}
 </content>
-
-IMPORTANT:
-1. Your response must be ONLY the JSON object with no additional text. The JSON should be compressed to a single line without any line breaks or unnecessary whitespace.
-2. If you cannot extract valid information from the content that matches the schema, respond only with null and nothing else.
-3. For the "version" field, NEVER include "Miku UI" or any UI brand name - extract only the version name itself (e.g., "Vampire v0.6.1").`,
+`,
+        },
+      ],
+      response_format: {
+        type: "json_schema",
+        json_schema: {
+          name: "device_release",
+          description: "Device release information extracted from a post",
+          schema: CreateDeviceValuesJsonSchema,
+          strict: true,
+        },
+      },
     });
 
-    console.log(response);
-
-    let cleanedResponse = response.response;
-
-    if (cleanedResponse.startsWith('"') && cleanedResponse.endsWith('"')) {
-      cleanedResponse = cleanedResponse.slice(1, -1);
-    }
-
-    cleanedResponse = cleanedResponse
-      .replace(/\\n/g, "\\n")
-      .replace(/\\"/g, '\\"')
-      .replace(/\\r/g, "\\r")
-      .replace(/\\\\/g, "\\\\");
-
     try {
-      const parsedData = JSON.parse(cleanedResponse);
-      return CreateDeviceValuesSchema.parse(parsedData);
+      const parsedData = parseJsonPayload(getResponsePayload(response));
+      if (parsedData === null) {
+        return null;
+      }
+
+      const result = CreateDeviceValuesSchema.safeParse(parsedData);
+      if (!result.success) {
+        console.error("Data validation failed:", result.error);
+        return null;
+      }
+
+      return result.data;
     } catch (parseError) {
       console.error("Data validation failed:", parseError);
       return null;
     }
   } catch (error) {
     console.error("Failed to parse AI response:", error);
-    throw new Error("Failed to parse device information", { cause: error });
+    throw new Error("Failed to parse device information", {
+      cause: error,
+    });
   }
 };
