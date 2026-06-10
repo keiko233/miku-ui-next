@@ -10,7 +10,7 @@
     {
       "binding": "DB",
       "database_name": "prisma-miku-ui",
-      "database_id": "6976e7fa-a50f-44f3-bc6d-5b53330c872c",
+      "database_id": "5d04c381-2961-41ed-bf49-ac215402a93d",
       "migrations_dir": "./migrations",
     },
   ],
