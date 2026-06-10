@@ -1,15 +1,17 @@
 "use client";
 
-import { Button } from "@libnyanpasu/material-design-react";
 import MaterialSymbolsDarkModeOutlineRounded from "~icons/material-symbols/dark-mode-outline-rounded";
 import MaterialSymbolsLightModeOutlineRounded from "~icons/material-symbols/light-mode-outline-rounded";
+
+import { Button } from "@/components/ui/button";
+
 import { useThemeContext } from "./providers/theme-provider";
 
-export const DrakMode = () => {
+export const DarkMode = () => {
   const { dark, toggle } = useThemeContext();
 
   return (
-    <Button icon variant="flat" onClick={toggle}>
+    <Button variant="ghost" size="icon" onClick={toggle} aria-label="Toggle dark mode">
       {dark ? (
         <MaterialSymbolsLightModeOutlineRounded />
       ) : (

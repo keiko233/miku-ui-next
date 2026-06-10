@@ -2,6 +2,7 @@
 
 import { useInterval } from "ahooks";
 import { useState } from "react";
+
 import { getTaskById } from "@/actions/query/tasks";
 import { TaskStatus } from "@/schema";
 
@@ -17,9 +18,9 @@ export const MessagePolling = ({
   const [message, setMessage] = useState<string>();
   const [shouldStop, setShouldStop] = useState(false);
 
-  const clearInterval = useInterval(
+  useInterval(
     async () => {
-      const res = await getTaskById(taskId);
+      const res = await getTaskById({ data: { id: taskId } });
 
       if (res?.content) {
         setMessage(res.content);
@@ -30,8 +31,8 @@ export const MessagePolling = ({
         onFinish?.();
       }
     },
-    shouldStop ? undefined : intervalTime ?? 3000,
+    shouldStop ? undefined : (intervalTime ?? 3000),
   );
 
-  return <p className="whitespace-pre-line font-mono">{message}</p>;
+  return <p className="font-mono whitespace-pre-line">{message}</p>;
 };

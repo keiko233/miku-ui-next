@@ -1,5 +1,7 @@
 import { expect, test } from "vitest";
+
 import { CHANNEL_ID } from "@/consts";
+
 import { getChannelLastPostId, getRawPostContent } from "./telegram";
 
 test("telegram get latest post id", { timeout: 10000, retry: 3 }, async () => {

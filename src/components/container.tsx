@@ -1,6 +1,9 @@
-import { cn } from "@libnyanpasu/material-design-libs";
 import type { PropsWithChildren, ReactNode } from "react";
-import { DrakMode } from "./dark-mode";
+
+import { Separator } from "@/components/ui/separator";
+import { cn } from "@/lib/utils";
+
+import { DarkMode } from "./dark-mode";
 
 export const Container = ({
   children,
@@ -13,27 +16,24 @@ export const Container = ({
   rightContent?: ReactNode;
 }) => {
   return (
-    <div className="dark:text-surface h-dvh overflow-x-hidden">
-      <div className="bg-primary-container dark:bg-on-secondary-container flex h-16 items-center gap-2 px-4">
-        {/* <Image src="/banner.png" width={128} height={128} alt="banner" /> */}
-
-        <h1
-          className={cn(
-            "text-primary text-2xl font-extrabold",
-            !centerContent && "flex-1",
-          )}
-        >
+    <div className="flex min-h-dvh flex-col">
+      <div className="bg-primary/15 sticky top-0 z-10 flex h-16 shrink-0 items-center gap-2 px-4">
+        <h1 className={cn("text-primary text-2xl font-extrabold", !centerContent && "flex-1")}>
           {title}
         </h1>
 
         {centerContent}
 
-        <DrakMode />
+        {(rightContent || centerContent) && (
+          <Separator orientation="vertical" className="mx-1 h-6" />
+        )}
+
+        <DarkMode />
 
         {rightContent}
       </div>
 
-      <div className="h-dvh-subtract-16 overflow-x-hidden">{children}</div>
+      <div className="flex flex-1 flex-col">{children}</div>
     </div>
   );
 };

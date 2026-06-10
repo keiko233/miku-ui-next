@@ -1,49 +1,47 @@
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import {
-  Button,
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  Modal,
-  ModalClose,
-  ModalContent,
-  ModalTitle,
-  ModalTrigger,
-} from "@libnyanpasu/material-design-react";
-import Image from "next/image";
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogPanel,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { Device } from "@/schema";
+
 import { DeviceInfo } from "./device-info";
 
-const DetialsDialog = ({ device }: { device: Device }) => {
+const DetailsDialog = ({ device }: { device: Device }) => {
   return (
-    <Modal>
-      <ModalTrigger asChild>
-        <Button>Details</Button>
-      </ModalTrigger>
+    <Dialog>
+      <DialogTrigger render={<Button variant="outline">Details</Button>} />
 
-      <ModalContent>
-        <Card className="w-96">
-          <CardHeader>
-            <ModalTitle>
-              {device.name} {device.version}
-            </ModalTitle>
-          </CardHeader>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>
+            {device.name} {device.version}
+          </DialogTitle>
+          <DialogDescription>View full device details</DialogDescription>
+        </DialogHeader>
 
-          <CardContent>
-            <DeviceInfo device={device} />
-          </CardContent>
+        <DialogPanel>
+          <DeviceInfo device={device} />
+        </DialogPanel>
 
-          <CardFooter className="gap-1">
-            <ModalClose>Close</ModalClose>
-          </CardFooter>
-        </Card>
-      </ModalContent>
-    </Modal>
+        <DialogFooter variant="bare">
+          <DialogClose render={<Button variant="outline">Close</Button>} />
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 };
 
 export const DeviceCard = ({ device }: { device: Device }) => {
-  const Mapping = {
+  const mapping = {
     "Miku UI": device.version,
     Android: device.androidVersion,
     Status: device.status,
@@ -52,28 +50,29 @@ export const DeviceCard = ({ device }: { device: Device }) => {
     "Publish Date": new Date(device.publishAt).toDateString(),
   };
 
-  // TODO: Image as transparent resource
   return (
-    <Card key={device.id} className="overflow-clip shadow">
+    <Card className="overflow-clip">
       <div className="flex h-48 justify-center bg-white">
-        <Image
+        <img
           src={`/devices/${device.codename.toLocaleLowerCase()}.png`}
           width={192}
           height={192}
-          alt={`${device.name} device image`}
+          alt={device.name}
+          loading="lazy"
+          decoding="async"
         />
       </div>
 
-      <CardHeader className="drop-shadow-xs">
-        <h2>
+      <CardHeader>
+        <CardTitle>
           {device.name}
-          <span className="text-on-surface-variant/50"> / </span>
+          <span className="text-muted-foreground/72"> / </span>
           <code>{device.codename}</code>
-        </h2>
+        </CardTitle>
       </CardHeader>
 
       <CardContent className="gap-0.5 text-sm">
-        {Object.entries(Mapping).map(([key, value]) => (
+        {Object.entries(mapping).map(([key, value]) => (
           <div key={key} className="flex gap-2 whitespace-nowrap">
             <b className="w-24">{key}:</b> <span>{value}</span>
           </div>
@@ -81,11 +80,11 @@ export const DeviceCard = ({ device }: { device: Device }) => {
       </CardContent>
 
       <CardFooter className="gap-1">
-        <a href={device.sourcforgeUrl} target="_blank">
+        <a href={device.sourcforgeUrl} target="_blank" rel="noreferrer">
           <Button>Download</Button>
         </a>
 
-        <DetialsDialog device={device} />
+        <DetailsDialog device={device} />
       </CardFooter>
     </Card>
   );

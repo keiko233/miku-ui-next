@@ -7,7 +7,7 @@ type FileWithUrl = {
 
 /**
  * Extracts file information from a SourceForge directory page.
- * 
+ *
  * This function fetches the HTML content from the provided URL,
  * then parses it to extract file names and their download URLs using regex.
  * The regex is designed to match SourceForge's specific HTML structure for file listings.

@@ -1,0 +1,13 @@
+{
+  "$schema": "./node_modules/oxfmt/configuration_schema.json",
+  "endOfLine": "lf",
+  "semi": true,
+  "singleQuote": false,
+  "bracketSpacing": true,
+  "tabWidth": 2,
+  "trailingComma": "all",
+  "sortImports": true,
+  "sortTailwindcss": true,
+  "sortPackageJson": true,
+  "ignorePatterns": ["dist", "node_modules", ".output", ".vinxi", ".wrangler", "src/route-tree.gen.ts", ".oxfmtrc.json", ".oxlintrc.json"]
+}

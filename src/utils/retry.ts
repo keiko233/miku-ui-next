@@ -29,6 +29,8 @@ export async function retry<T>(
 
   for (let attempt = 0; attempt <= maxRetries; attempt++) {
     try {
+      // Sequential await is required for retry semantics — parallelism would defeat the purpose.
+      // oxlint-disable-next-line no-await-in-loop
       return await fn();
     } catch (error) {
       if (attempt === maxRetries || !retryCondition(error as Error)) {
@@ -37,7 +39,8 @@ export async function retry<T>(
 
       lastError = error as Error;
 
-      // Wait for the specified delay
+      // Wait for the specified delay (sequential by design — see above).
+      // oxlint-disable-next-line no-await-in-loop
       await new Promise((resolve) => setTimeout(resolve, delay));
 
       // Increase the delay for the next attempt (exponential backoff)
@@ -69,11 +72,8 @@ export async function fetchWithRetry(
         return true;
       }
 
-       
       if (error instanceof Response || (error as any).status) {
-        const status =
-           
-          error instanceof Response ? error.status : (error as any).status;
+        const status = error instanceof Response ? error.status : (error as any).status;
         // Only retry on server errors (5xx)
         return status >= 500 && status < 600;
       }

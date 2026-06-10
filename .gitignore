@@ -13,13 +13,6 @@
 # testing
 /coverage
 
-# next.js
-/.next/
-/out/
-
-# production
-/build
-
 # misc
 .DS_Store
 *.pem
@@ -44,5 +37,4 @@ next-env.d.ts
 .wrangler
 .dev.vars
 
-.open-next
-.dev.vars
+dist

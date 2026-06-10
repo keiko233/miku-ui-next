@@ -2,8 +2,10 @@
 
 import {
   createContext,
+  useCallback,
   useContext,
   useEffect,
+  useMemo,
   type PropsWithChildren,
 } from "react";
 import { useLocalStorage, useMediaQuery } from "usehooks-ts";
@@ -24,17 +26,13 @@ export const useThemeContext = () => {
 };
 
 export const ThemeProvider = ({ children }: PropsWithChildren) => {
-  const [dark, setDark] = useLocalStorage<boolean | null>(
-    "custom-darkmode",
-    null,
-  );
+  const [dark, setDark] = useLocalStorage<boolean | null>("custom-darkmode", null);
+  const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
 
-  const toggle = () => {
+  const toggle = useCallback(() => {
     const value = dark === null ? !prefersDarkMode : !dark;
     setDark(value);
-  };
-
-  const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
+  }, [dark, prefersDarkMode, setDark]);
 
   useEffect(() => {
     const html = window.document.documentElement;
@@ -48,14 +46,7 @@ export const ThemeProvider = ({ children }: PropsWithChildren) => {
     }
   }, [dark, prefersDarkMode]);
 
-  return (
-    <ThemeContext.Provider
-      value={{
-        dark,
-        toggle,
-      }}
-    >
-      {children}
-    </ThemeContext.Provider>
-  );
+  const contextValue = useMemo(() => ({ dark, toggle }), [dark, toggle]);
+
+  return <ThemeContext.Provider value={contextValue}>{children}</ThemeContext.Provider>;
 };

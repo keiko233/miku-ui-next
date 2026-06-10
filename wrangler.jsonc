@@ -1,36 +1,19 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "miku-ui-next",
-  "main": "custom-worker.ts",
   "compatibility_date": "2025-03-03",
-  "compatibility_flags": [
-    "nodejs_compat"
-  ],
-  "minify": true,
-  "observability": {
-    "enabled": true
-  },
-  "assets": {
-    "directory": ".open-next/assets",
-    "binding": "ASSETS"
-  },
-  "placement": {
-    "mode": "smart"
-  },
+  "compatibility_flags": ["nodejs_compat"],
+  "main": "@tanstack/react-start/server-entry",
+  "observability": { "enabled": true },
+  "placement": { "mode": "smart" },
   "d1_databases": [
     {
       "binding": "DB",
       "database_name": "prisma-miku-ui",
       "database_id": "6976e7fa-a50f-44f3-bc6d-5b53330c872c",
-      "migrations_dir": "./migrations"
-    }
+      "migrations_dir": "./migrations",
+    },
   ],
-  "ai": {
-    "binding": "AI"
-  },
-  "triggers": {
-    "crons": [
-      "*/30 * * * *"
-    ]
-  }
+  "ai": { "binding": "AI" },
+  "triggers": { "crons": ["*/30 * * * *"] },
 }

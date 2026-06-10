@@ -1,4 +1,5 @@
-import { getCloudflareContext } from "@opennextjs/cloudflare";
+import { env } from "cloudflare:workers";
+
 import { CreateDeviceValues } from "@/actions/query/devices";
 import { DeviceSchema } from "@/schema";
 
@@ -9,11 +10,12 @@ const CreateDeviceValuesSchema = DeviceSchema.omit({
   updatedAt: true,
 });
 
-const ask = async (options: AiTextGenerationInput) => {
-  const { env } = await getCloudflareContext({ async: true });
-
+const ask = async (options: { prompt: string }): Promise<{ response: string }> => {
   // refence: https://developers.cloudflare.com/workers-ai/json-mode/#supported-models
-  return await env.AI.run("@cf/meta/llama-3.1-8b-instruct-fp8", options);
+  const result = (await (
+    env.AI.run as unknown as (model: string, inputs: unknown) => Promise<unknown>
+  )("@cf/google/gemma-4-26b-a4b-it", options)) as { response: string };
+  return result;
 };
 
 export const parsePostContent = async (
@@ -45,76 +47,11 @@ IMPORTANT:
 1. Your response must be ONLY the JSON object with no additional text. The JSON should be compressed to a single line without any line breaks or unnecessary whitespace.
 2. If you cannot extract valid information from the content that matches the schema, respond only with null and nothing else.
 3. For the "version" field, NEVER include "Miku UI" or any UI brand name - extract only the version name itself (e.g., "Vampire v0.6.1").`,
-      // max_tokens: 1024,
-      // fucking cloudflare workers AI JSON output was broken
-      // response_format: {
-      //   type: "json_object",
-      //   json_schema: {
-      //     type: "object",
-      //     properties: {
-      //       codename: {
-      //         type: "string",
-      //         description: "Device codename (e.g., 'odin')",
-      //       },
-      //       name: {
-      //         type: "string",
-      //         description: "Device name (e.g., 'Xiaomi Mix 4')",
-      //       },
-      //       version: {
-      //         type: "string",
-      //         description: "ROM version (e.g., 'Miku UI Vampire v0.6.1')",
-      //       },
-      //       androidVersion: {
-      //         type: "integer",
-      //         description: "Android version number (e.g., 15)",
-      //       },
-      //       status: {
-      //         type: "string",
-      //         enum: ["COMMUNITY", "OFFICIAL"],
-      //         description: "Device status, either COMMUNITY or OFFICIAL",
-      //       },
-      //       selinuxStatus: {
-      //         type: "string",
-      //         enum: ["Enforcing", "Permissive"],
-      //         description: "SELinux status, either Enforcing or Permissive",
-      //       },
-      //       kernelsuVersion: {
-      //         type: "integer",
-      //         description: "KernelSU version number",
-      //       },
-      //       sourcforgeUrl: {
-      //         type: "string",
-      //         description: "SourceForge download link",
-      //       },
-      //       changelog: {
-      //         type: "string",
-      //         description: "Update changelog content, use \\n for line breaks",
-      //       },
-      //       note: {
-      //         type: "string",
-      //         nullable: true,
-      //         description: "Additional notes (optional), use \\n for line breaks",
-      //       },
-      //     },
-      //     required: [
-      //       "codename",
-      //       "name",
-      //       "version",
-      //       "androidVersion",
-      //       "status",
-      //       "selinuxStatus",
-      //       "kernelsuVersion",
-      //       "sourcforgeUrl",
-      //     ],
-      //   },
-      // },
     });
 
     console.log(response);
 
-    // cloudflare workers AI response broken too :)
-     
-    let cleanedResponse = (response as any).response;
+    let cleanedResponse = response.response;
 
     if (cleanedResponse.startsWith('"') && cleanedResponse.endsWith('"')) {
       cleanedResponse = cleanedResponse.slice(1, -1);
@@ -135,6 +72,6 @@ IMPORTANT:
     }
   } catch (error) {
     console.error("Failed to parse AI response:", error);
-    throw new Error("Failed to parse device information");
+    throw new Error("Failed to parse device information", { cause: error });
   }
 };

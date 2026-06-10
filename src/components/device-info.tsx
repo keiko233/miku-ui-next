@@ -1,4 +1,4 @@
-import { Device } from "@/schema";
+import type { Device } from "@/schema";
 
 export const DeviceInfo = ({ device }: { device: Device }) => {
   return (

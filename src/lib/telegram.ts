@@ -17,9 +17,7 @@ import { fetchWithRetry } from "@/utils/retry";
  * console.log(latestPostId); // e.g. 1234
  * ```
  */
-export const getChannelLastPostId = async (
-  channel: string,
-): Promise<number | null> => {
+export const getChannelLastPostId = async (channel: string): Promise<number | null> => {
   const res = await fetchWithRetry(`https://t.me/s/${channel}`);
   const text = await res.text();
 

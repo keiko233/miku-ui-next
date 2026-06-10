@@ -1,0 +1,33 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "plugins": ["typescript", "react", "react-hooks", "jsx-a11y", "unicorn", "oxc"],
+  "categories": {
+    "correctness": "error",
+    "suspicious": "warn",
+    "perf": "warn"
+  },
+  "env": {
+    "browser": true,
+    "node": true,
+    "es2024": true
+  },
+  "rules": {
+    "react/react-in-jsx-scope": "off",
+    "typescript/no-unused-vars": ["error", { "argsIgnorePattern": "^_" }],
+    "jsx-a11y/click-events-have-key-events": "warn",
+    "jsx-a11y/no-static-element-interactions": "warn",
+    "jsx-a11y/img-redundant-alt": "warn",
+    "jsx-a11y/prefer-tag-over-role": "warn"
+  },
+  "ignorePatterns": [
+    "node_modules",
+    ".output",
+    ".vinxi",
+    ".wrangler",
+    "dist",
+    "coverage",
+    "*.gen.ts",
+    "worker-configuration.d.ts",
+    "src/route-tree.gen.ts"
+  ]
+}
