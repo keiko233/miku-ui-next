@@ -18,6 +18,17 @@ const executeCrawlInput = z.object({
 export const executeCrawl = createServerFn({ method: "POST" })
   .validator(executeCrawlInput)
   .handler(async ({ data }): Promise<{ message: string; taskId?: string }> => {
+    // Structured log mirrors worker.ts:scheduled-context-crawl so future
+    // "client typed 604 but server got 594" mismatches are greppable in the
+    // worker logs.
+    console.log(
+      JSON.stringify({
+        event: "execute-crawl",
+        postId: data.postId,
+        options: data.options,
+        requestId: crypto.randomUUID(),
+      }),
+    );
     return createAndRunCrawlTask(data.postId, {
       disableWaitUntil: data.options.disableWaitUntil,
       force: data.options.force,

@@ -20,7 +20,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { ContentCrawl } from "@/routes/dashboard/context/-components/context-crawl";
+import { ContextCrawlCard } from "@/routes/dashboard/context/-components/context-crawl";
 import { TableActions } from "@/routes/dashboard/context/-components/table-actions";
 
 const searchSchema = z.object({
@@ -41,9 +41,15 @@ function ContextPage() {
 
   const pageNumbers = getPageNumbers(page, totalPages);
 
+  // Single source of truth for "what's the highest Context ID already in DB" —
+  // the table on this page is the real DB view, so we derive it from the
+  // loaded rows. The card receives this as a prop instead of caching its own
+  // stale value.
+  const latestContextIndex = contexts.length > 0 ? Math.max(...contexts.map((c) => c.index)) : null;
+
   return (
     <div className="flex flex-col gap-4">
-      <ContentCrawl />
+      <ContextCrawlCard latestContextIndex={latestContextIndex} />
 
       <Table>
         <TableHeader>

@@ -1,7 +1,7 @@
 "use client";
 
 import { useLockFn, useMemoizedFn } from "ahooks";
-import { useState, useTransition } from "react";
+import { useEffect, useRef, useState, useTransition } from "react";
 
 import { executeCrawl } from "@/actions/task/context-crawl";
 import { getLastPostId } from "@/actions/telegram/post";
@@ -35,38 +35,75 @@ const CONTEXT_CRAWL_TIPS =
   "not to dispatch too many tasks at once, even though we've already " +
   "implemented a concurrent workaround.";
 
-const GetLastPostID = ({ onFinish }: { onFinish: (lastPostId: number) => void }) => {
+const parseContextId = (s: string): number | undefined => {
+  const n = parseInt(s, 10);
+  return Number.isNaN(n) ? undefined : n;
+};
+
+const GetLastPostIdButton = ({ onFinish }: { onFinish: (id: number) => void }) => {
   const [isPending, startTransition] = useTransition();
 
   const handleClick = () => {
     startTransition(async () => {
       const id = await getLastPostId();
-      if (id) {
-        onFinish(id);
-      }
+      if (id) onFinish(id);
     });
   };
 
   return (
-    <Button onClick={handleClick} disabled={isPending}>
-      {isPending ? <Spinner /> : "Get Last Post ID"}
+    <Button onClick={handleClick} disabled={isPending} variant="outline">
+      {isPending ? <Spinner /> : "Get Latest Post ID"}
     </Button>
   );
 };
 
-const ExecuteDialog = ({ from, to }: { from?: number; to?: number }) => {
+const ExecuteDialog = ({
+  from,
+  to,
+  onComplete,
+}: {
+  from?: number;
+  to?: number;
+  onComplete: () => void;
+}) => {
   const [open, setOpen] = useState(false);
-  const [currentPostId, setCurrentPostId] = useState<number>();
+  const [currentId, setCurrentId] = useState<number>();
   const [pending, setPending] = useState(false);
   const [taskIds, setTaskIds] = useState<string[]>([]);
   const [isFinished, setIsFinished] = useState(false);
 
-  const handleClick = useLockFn(async () => {
-    if (!from || !to || from > to) return;
+  // Refs guard async callbacks. handleFinish is invoked by MessagePolling's
+  // setInterval (3s), which may outlive the render that started the crawl.
+  // Reading via refs guarantees we use the from/to/currentId values that
+  // were current at the moment the user clicked Yes — not a stale closure.
+  const fromRef = useRef(from);
+  const toRef = useRef(to);
+  const currentIdRef = useRef(currentId);
+  const onCompleteRef = useRef(onComplete);
+  useEffect(() => {
+    fromRef.current = from;
+  }, [from]);
+  useEffect(() => {
+    toRef.current = to;
+  }, [to]);
+  useEffect(() => {
+    currentIdRef.current = currentId;
+  }, [currentId]);
+  useEffect(() => {
+    onCompleteRef.current = onComplete;
+  }, [onComplete]);
+
+  const canStart = from !== undefined && to !== undefined && from <= to;
+
+  const handleStart = useLockFn(async () => {
+    const f = fromRef.current;
+    const t = toRef.current;
+    if (!f || !t || f > t) return;
+    setPending(true);
+    setIsFinished(false);
+    setCurrentId(f);
     try {
-      setPending(true);
-      setCurrentPostId(from);
-      const { taskId } = await executeCrawl({ data: { postId: from } });
+      const { taskId } = await executeCrawl({ data: { postId: f } });
       if (taskId) setTaskIds((prev) => [...prev, taskId]);
     } catch (e) {
       console.error(e);
@@ -74,44 +111,75 @@ const ExecuteDialog = ({ from, to }: { from?: number; to?: number }) => {
     }
   });
 
-  const handleFinish = async () => {
-    if (currentPostId === to) {
+  const handleFinish = useMemoizedFn(async () => {
+    const t = toRef.current;
+    const cur = currentIdRef.current;
+    if (cur === undefined || t === undefined) return;
+    if (cur >= t) {
       setPending(false);
       setIsFinished(true);
+      onCompleteRef.current();
       return;
     }
-    if (currentPostId) {
-      const nextPostId = currentPostId + 1;
-      setCurrentPostId(nextPostId);
-      const { taskId } = await executeCrawl({ data: { postId: nextPostId } });
-      if (taskId) setTaskIds((prev) => [...prev, taskId]);
-    }
-  };
+    const nextId = cur + 1;
+    setCurrentId(nextId);
+    const { taskId } = await executeCrawl({ data: { postId: nextId } });
+    if (taskId) setTaskIds((prev) => [...prev, taskId]);
+  });
 
   const handleOpenChange = (v: boolean) => {
     setOpen(v);
-    if (!v) {
-      setPending(false);
+    // Only clear in-dialog state once the entire crawl has finished. If the
+    // user hides the dialog mid-crawl, keep the task list and progress; the
+    // server-side tasks continue, and re-opening resumes polling.
+    if (!v && isFinished) {
       setTaskIds([]);
+      setCurrentId(undefined);
       setIsFinished(false);
+      setPending(false);
     }
   };
+
+  const total = from !== undefined && to !== undefined ? to - from + 1 : 0;
+  const done = isFinished
+    ? total
+    : currentId !== undefined && from !== undefined
+      ? currentId - from
+      : 0;
+  const progress = total > 0 ? Math.min(Math.max(done / total, 0), 1) : 0;
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogTrigger render={<Button variant="outline">Execute</Button>} />
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Execute Crawl</DialogTitle>
+          <DialogTitle>Execute Context Crawl</DialogTitle>
           <DialogDescription>
-            Are you sure you want to crawl the content from {from} to {to}?
+            {canStart
+              ? `Are you sure you want to crawl Context ${from} to ${to}?`
+              : "Please set valid From and To Context IDs (From must be ≤ To)."}
           </DialogDescription>
         </DialogHeader>
 
         <DialogPanel>
-          {currentPostId && (
-            <p className="text-muted-foreground mb-2 text-sm">
-              Current Post: {currentPostId} / {to}
+          {currentId !== undefined && from !== undefined && to !== undefined && (
+            <div className="mb-3 space-y-1">
+              <p className="text-muted-foreground text-sm">
+                Crawled {done} / {total} contexts
+                {pending && !isFinished && ` (crawling Context ${currentId})`}
+              </p>
+              <div className="bg-muted h-1.5 w-full overflow-hidden rounded">
+                <div
+                  className="bg-primary h-full transition-all"
+                  style={{ width: `${progress * 100}%` }}
+                />
+              </div>
+            </div>
+          )}
+
+          {pending && !isFinished && (
+            <p className="text-muted-foreground mb-2 text-xs italic">
+              You can hide this dialog — the crawl continues server-side. Re-open to resume polling.
             </p>
           )}
 
@@ -124,26 +192,47 @@ const ExecuteDialog = ({ from, to }: { from?: number; to?: number }) => {
 
         <DialogFooter variant="bare">
           {!isFinished && (
-            <Button onClick={handleClick} disabled={pending}>
-              {pending ? <Spinner /> : "Yes"}
+            <Button onClick={handleStart} disabled={pending || !canStart}>
+              {pending ? <Spinner /> : "Yes, start"}
             </Button>
           )}
-          <DialogClose render={<Button variant="outline">Close</Button>} />
+          <DialogClose
+            render={<Button variant="outline">{pending && !isFinished ? "Hide" : "Close"}</Button>}
+          />
         </DialogFooter>
       </DialogContent>
     </Dialog>
   );
 };
 
-export const ContentCrawl = () => {
-  const [lastPostId, setLastPostId] = useState<number>();
+export const ContextCrawlCard = ({ latestContextIndex }: { latestContextIndex: number | null }) => {
   const [from, setFrom] = useState<number>();
   const [to, setTo] = useState<number>();
+  const [userEdited, setUserEdited] = useState(false);
 
-  const handleChangeLastPostId = useMemoizedFn((id: number) => {
-    setLastPostId(id);
-    if (!from) setFrom(id);
-    if (!to) setTo(id);
+  const handleSetLastPostId = useMemoizedFn((id: number) => {
+    if (userEdited) {
+      const ok = window.confirm(
+        `Replace the current From/To values with the latest Post ID (${id})?`,
+      );
+      if (!ok) return;
+    }
+    setFrom(id);
+    setTo(id);
+    setUserEdited(false);
+  });
+
+  const handleFromChange = (v: number | undefined) => {
+    setFrom(v);
+    setUserEdited(true);
+  };
+  const handleToChange = (v: number | undefined) => {
+    setTo(v);
+    setUserEdited(true);
+  };
+
+  const handleComplete = useMemoizedFn(() => {
+    setUserEdited(false);
   });
 
   return (
@@ -155,6 +244,11 @@ export const ContentCrawl = () => {
 
       <CardContent>
         <div className="space-y-3">
+          {latestContextIndex !== null && (
+            <p className="text-muted-foreground text-sm">
+              Latest Context ID in DB: <span className="font-mono">{latestContextIndex}</span>
+            </p>
+          )}
           <div>
             <label htmlFor="crawl-from" className="mb-1 block text-sm font-medium">
               From
@@ -162,9 +256,12 @@ export const ContentCrawl = () => {
             <Input
               id="crawl-from"
               type="number"
-              placeholder="Starting from which Post ID"
+              min={1}
+              placeholder="Starting Context ID"
               value={from ?? ""}
-              onChange={(e) => setFrom(e.target.value ? parseInt(e.target.value) : undefined)}
+              onChange={(e) =>
+                handleFromChange(e.target.value ? parseContextId(e.target.value) : undefined)
+              }
             />
           </div>
           <div>
@@ -174,20 +271,23 @@ export const ContentCrawl = () => {
             <Input
               id="crawl-to"
               type="number"
-              placeholder="Ending to which Post ID"
+              min={1}
+              placeholder="Ending Context ID"
               value={to ?? ""}
-              onChange={(e) => setTo(e.target.value ? parseInt(e.target.value) : undefined)}
+              onChange={(e) =>
+                handleToChange(e.target.value ? parseContextId(e.target.value) : undefined)
+              }
             />
           </div>
-          {lastPostId && (
-            <p className="text-muted-foreground text-sm">Last Post ID: {lastPostId}</p>
-          )}
+          <p className="text-muted-foreground text-xs">
+            Context ID equals the Telegram post ID on the channel.
+          </p>
         </div>
       </CardContent>
 
       <CardFooter className="gap-2">
-        <ExecuteDialog from={from} to={to} />
-        <GetLastPostID onFinish={handleChangeLastPostId} />
+        <ExecuteDialog from={from} to={to} onComplete={handleComplete} />
+        <GetLastPostIdButton onFinish={handleSetLastPostId} />
       </CardFooter>
     </Card>
   );

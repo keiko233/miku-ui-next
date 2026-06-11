@@ -179,7 +179,7 @@ async function clearStaleCrawlTask(envOverride?: CloudflareEnv) {
 async function createCrawlTask(postId: number, envOverride?: CloudflareEnv) {
   const db = getDb(envOverride);
   const id = crypto.randomUUID();
-  const content = `Create crawl post ${postId} task successfully`;
+  const content = `Create crawl context ${postId} task successfully`;
 
   await db.insert(tasks).values({
     id,
