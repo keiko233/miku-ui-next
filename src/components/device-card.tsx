@@ -80,9 +80,14 @@ export const DeviceCard = ({ device }: { device: Device }) => {
       </CardContent>
 
       <CardFooter className="gap-1">
-        <a href={device.sourcforgeUrl} target="_blank" rel="noreferrer">
-          <Button>Download</Button>
-        </a>
+        <Button
+          render={
+            // oxlint-disable-next-line jsx-a11y/anchor-has-content jsx-a11y/control-has-associated-label
+            <a href={device.sourcforgeUrl} target="_blank" rel="noreferrer" />
+          }
+        >
+          Download
+        </Button>
 
         <DetailsDialog device={device} />
       </CardFooter>
