@@ -1,8 +1,10 @@
 import { createServerFn } from "@tanstack/react-start";
+import { and, count, desc, eq } from "drizzle-orm";
 import { z } from "zod";
 
 import { DEFAULT_CARD_PAGE_SIZE } from "@/consts";
-import { getKysely } from "@/lib/kysely";
+import { devices } from "@/db/schema";
+import { getDb } from "@/lib/db";
 import { Device } from "@/schema";
 
 const getDevicesInput = z.object({
@@ -14,30 +16,31 @@ const getDevicesInput = z.object({
 export const getDevices = createServerFn({ method: "GET" })
   .validator(getDevicesInput)
   .handler(async ({ data }) => {
-    const kysely = await getKysely();
+    const db = getDb();
     const offset = (data.page - 1) * data.limit;
 
-    let devicesQuery = kysely.selectFrom("Devices").selectAll().orderBy("publishAt", "desc");
+    const where = data.codename ? eq(devices.codename, data.codename) : undefined;
 
-    let countQuery = kysely.selectFrom("Devices").select((eb) => [eb.fn.count("id").as("total")]);
-
-    if (data.codename) {
-      devicesQuery = devicesQuery.where("codename", "=", data.codename);
-      countQuery = countQuery.where("codename", "=", data.codename);
-    }
-
-    const [devices, totalCountResult] = await Promise.all([
-      devicesQuery.limit(data.limit).offset(offset).execute(),
-      countQuery.executeTakeFirstOrThrow(),
+    const [rows, totalCountResult] = await Promise.all([
+      db
+        .select()
+        .from(devices)
+        .where(where)
+        .orderBy(desc(devices.publishAt))
+        .limit(data.limit)
+        .offset(offset),
+      db.select({ total: count(devices.id) }).from(devices).where(where),
     ]);
 
+    const total = Number(totalCountResult[0]?.total ?? 0);
+
     return {
-      devices,
+      devices: rows,
       pagination: {
         page: data.page,
         limit: data.limit,
-        total: Number(totalCountResult.total),
-        totalPages: Math.ceil(Number(totalCountResult.total) / data.limit),
+        total,
+        totalPages: Math.ceil(total / data.limit),
       },
     };
   });
@@ -57,17 +60,17 @@ export const createDevice = createServerFn({ method: "POST" })
     }),
   )
   .handler(async ({ data }) => {
-    const kysely = await getKysely();
+    const db = getDb();
 
     if (data.unique?.version || data.unique?.codename) {
-      let query = kysely.selectFrom("Devices").selectAll();
-      if (data.unique.version) {
-        query = query.where("version", "=", data.values.version);
-      }
-      if (data.unique.codename) {
-        query = query.where("codename", "=", data.values.codename);
-      }
-      const exist = await query.executeTakeFirst();
+      const conditions = [
+        data.unique.version ? eq(devices.version, data.values.version) : undefined,
+        data.unique.codename ? eq(devices.codename, data.values.codename) : undefined,
+      ].filter(Boolean) as ReturnType<typeof eq>[];
+
+      const where = conditions.length === 1 ? conditions[0] : and(...conditions);
+
+      const exist = (await db.select().from(devices).where(where).limit(1))[0];
 
       if (exist) {
         const hasUpdates = Object.keys(data.values).some((key) => {
@@ -80,35 +83,31 @@ export const createDevice = createServerFn({ method: "POST" })
           );
         });
         if (hasUpdates) {
-          await kysely
-            .updateTable("Devices")
+          await db
+            .update(devices)
             .set({
               ...data.values,
               updatedAt: new Date().getTime(),
             })
-            .where("id", "=", exist.id)
-            .execute();
+            .where(eq(devices.id, exist.id));
         }
         return { id: exist.id };
       }
     }
 
     const id = crypto.randomUUID();
-    await kysely
-      .insertInto("Devices")
-      .values({
-        id,
-        ...data.values,
-        createdAt: new Date().getTime(),
-        updatedAt: new Date().getTime(),
-      })
-      .execute();
+    await db.insert(devices).values({
+      id,
+      ...data.values,
+      createdAt: new Date().getTime(),
+      updatedAt: new Date().getTime(),
+    });
     return { id };
   });
 
 export const deleteDevice = createServerFn({ method: "POST" })
   .validator(z.object({ id: z.string() }))
   .handler(async ({ data }) => {
-    const kysely = await getKysely();
-    await kysely.deleteFrom("Devices").where("id", "=", data.id).execute();
+    const db = getDb();
+    await db.delete(devices).where(eq(devices.id, data.id));
   });

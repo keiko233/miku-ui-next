@@ -1,3 +1,4 @@
+import { drizzleAdapter } from "@better-auth/drizzle-adapter";
 import { createServerFn, createServerOnlyFn } from "@tanstack/react-start";
 import { getRequestHeaders } from "@tanstack/react-start/server";
 import { betterAuth } from "better-auth";
@@ -5,16 +6,17 @@ import { admin } from "better-auth/plugins";
 import { tanstackStartCookies } from "better-auth/tanstack-start";
 import { env } from "cloudflare:workers";
 
+import { account, session, user, verification } from "@/db/schema";
 import { UserRole } from "@/schema";
 
-import { getKysely } from "./kysely";
+import { getDb } from "./db";
 
 export const getAuth = createServerOnlyFn(async () =>
   betterAuth({
-    database: {
-      db: await getKysely(),
-      type: "sqlite",
-    },
+    database: drizzleAdapter(getDb(), {
+      provider: "sqlite",
+      schema: { user, session, account, verification },
+    }),
     baseURL: env.BETTER_AUTH_URL,
     socialProviders: {
       github: {

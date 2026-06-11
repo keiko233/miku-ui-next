@@ -37,4 +37,8 @@ next-env.d.ts
 .wrangler
 .dev.vars
 
+# local D1 dumps — contain user PII / OAuth tokens; never commit
+database.sql
+*.dump.sql
+
 dist

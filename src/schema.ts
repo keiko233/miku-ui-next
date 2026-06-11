@@ -128,14 +128,3 @@ export const VerificationSchema = z.object({
 });
 
 export type Verification = z.infer<typeof VerificationSchema>;
-
-// not need zod schema
-export interface Database {
-  Devices: Device;
-  Tasks: Task;
-  Context: Context;
-  User: User;
-  Session: Session;
-  Account: Account;
-  Verification: Verification;
-}

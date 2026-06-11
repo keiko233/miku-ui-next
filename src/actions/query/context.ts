@@ -1,8 +1,10 @@
 import { createServerFn } from "@tanstack/react-start";
+import { count, desc, eq, type AnyColumn } from "drizzle-orm";
 import { z } from "zod";
 
 import { DEFAULT_CARD_PAGE_SIZE } from "@/consts";
-import { getKysely } from "@/lib/kysely";
+import { context } from "@/db/schema";
+import { getDb } from "@/lib/db";
 import { Context } from "@/schema";
 
 const getContextsInput = z.object({
@@ -13,33 +15,37 @@ const getContextsInput = z.object({
 export const getContexts = createServerFn({ method: "GET" })
   .validator(getContextsInput)
   .handler(async ({ data }) => {
-    const kysely = await getKysely();
+    const db = getDb();
     const offset = (data.page - 1) * data.limit;
 
-    const [contexts, totalCountResult] = await Promise.all([
-      kysely
-        .selectFrom("Context")
-        .selectAll()
-        .orderBy("createdAt", "desc")
+    const [rows, totalCountResult] = await Promise.all([
+      db
+        .select()
+        .from(context)
+        .orderBy(desc(context.createdAt))
         .limit(data.limit)
-        .offset(offset)
-        .execute(),
-      kysely
-        .selectFrom("Context")
-        .select((eb) => [eb.fn.count("id").as("total")])
-        .executeTakeFirstOrThrow(),
+        .offset(offset),
+      db.select({ total: count(context.id) }).from(context),
     ]);
 
+    const total = Number(totalCountResult[0]?.total ?? 0);
+
     return {
-      contexts,
+      contexts: rows,
       pagination: {
         page: data.page,
         limit: data.limit,
-        total: Number(totalCountResult.total),
-        totalPages: Math.ceil(Number(totalCountResult.total) / data.limit),
+        total,
+        totalPages: Math.ceil(total / data.limit),
       },
     };
   });
+
+const orderByMap: Record<"index" | "createdAt" | "updatedAt", AnyColumn> = {
+  index: context.index,
+  createdAt: context.createdAt,
+  updatedAt: context.updatedAt,
+};
 
 const getLastContextInput = z.object({
   by: z.enum(["index", "createdAt", "updatedAt"]),
@@ -48,23 +54,17 @@ const getLastContextInput = z.object({
 export const getLastContext = createServerFn({ method: "GET" })
   .validator(getLastContextInput)
   .handler(async ({ data }) => {
-    const kysely = await getKysely();
-    return await kysely
-      .selectFrom("Context")
-      .selectAll()
-      .orderBy(data.by, "desc")
-      .executeTakeFirst();
+    const db = getDb();
+    return (await db.select().from(context).orderBy(desc(orderByMap[data.by])).limit(1))[0];
   });
 
 export const getContextByIndex = createServerFn({ method: "GET" })
   .validator(z.object({ index: z.number().int().nonnegative() }))
   .handler(async ({ data }) => {
-    const kysely = await getKysely();
-    return await kysely
-      .selectFrom("Context")
-      .selectAll()
-      .where("index", "=", data.index)
-      .executeTakeFirst();
+    const db = getDb();
+    return (
+      await db.select().from(context).where(eq(context.index, data.index)).limit(1)
+    )[0];
   });
 
 export const updateContextById = createServerFn({ method: "POST" })
@@ -75,15 +75,14 @@ export const updateContextById = createServerFn({ method: "POST" })
     }),
   )
   .handler(async ({ data }) => {
-    const kysely = await getKysely();
-    await kysely
-      .updateTable("Context")
+    const db = getDb();
+    await db
+      .update(context)
       .set({
         ...(data.values as Partial<Omit<Context, "id" | "createdAt" | "updatedAt">>),
         updatedAt: Date.now(),
       })
-      .where("id", "=", data.id)
-      .execute();
+      .where(eq(context.id, data.id));
   });
 
 export type CreateContextValues = Omit<Context, "id" | "createdAt" | "updatedAt">;
@@ -100,14 +99,12 @@ export const createContext = createServerFn({ method: "POST" })
     }),
   )
   .handler(async ({ data }) => {
-    const kysely = await getKysely();
+    const db = getDb();
 
     if (data.unique?.index) {
-      const exist = await kysely
-        .selectFrom("Context")
-        .selectAll()
-        .where("index", "=", data.values.index)
-        .executeTakeFirst();
+      const exist = (
+        await db.select().from(context).where(eq(context.index, data.values.index)).limit(1)
+      )[0];
 
       if (exist) {
         const hasUpdates = Object.keys(data.values).some((key) => {
@@ -121,14 +118,13 @@ export const createContext = createServerFn({ method: "POST" })
         });
 
         if (hasUpdates) {
-          await kysely
-            .updateTable("Context")
+          await db
+            .update(context)
             .set({
               ...data.values,
               updatedAt: Date.now(),
             })
-            .where("id", "=", exist.id)
-            .execute();
+            .where(eq(context.id, exist.id));
         }
 
         return { id: exist.id };
@@ -136,14 +132,11 @@ export const createContext = createServerFn({ method: "POST" })
     }
 
     const id = crypto.randomUUID();
-    await kysely
-      .insertInto("Context")
-      .values({
-        id,
-        ...data.values,
-        createdAt: Date.now(),
-        updatedAt: Date.now(),
-      })
-      .execute();
+    await db.insert(context).values({
+      id,
+      ...data.values,
+      createdAt: Date.now(),
+      updatedAt: Date.now(),
+    });
     return { id };
   });

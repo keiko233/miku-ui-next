@@ -1,19 +1,31 @@
 {
-  "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "miku-ui-next",
-  "compatibility_date": "2025-03-03",
-  "compatibility_flags": ["nodejs_compat"],
-  "main": "@tanstack/react-start/server-entry",
-  "observability": { "enabled": true },
-  "placement": { "mode": "smart" },
-  "d1_databases": [
-    {
-      "binding": "DB",
-      "database_name": "prisma-miku-ui",
-      "database_id": "5d04c381-2961-41ed-bf49-ac215402a93d",
-      "migrations_dir": "./migrations",
-    },
-  ],
-  "ai": { "binding": "AI" },
-  "triggers": { "crons": ["*/30 * * * *"] },
+	"$schema": "node_modules/wrangler/config-schema.json",
+	"name": "miku-ui-next",
+	"compatibility_date": "2025-03-03",
+	"compatibility_flags": [
+		"nodejs_compat"
+	],
+	"main": "@tanstack/react-start/server-entry",
+	"observability": {
+		"enabled": true
+	},
+	"placement": {
+		"mode": "smart"
+	},
+	"d1_databases": [
+		{
+			"binding": "DB",
+			"database_name": "miku-ui",
+			"database_id": "29dae37b-c4e9-4968-b6d9-2d5d275f8b88",
+			"remote": true
+		},
+	],
+	"ai": {
+		"binding": "AI"
+	},
+	"triggers": {
+		"crons": [
+			"*/30 * * * *"
+		]
+	},
 }
