@@ -1,7 +1,29 @@
 import { sql } from "drizzle-orm";
-import { integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
+import { customType, integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
 
 import { DeviceStatus, SELinuxStatus, TaskStatus, UserRole } from "@/schema";
+
+const sqliteDateText = customType<{
+  data: Date;
+  driverData: string | number;
+}>({
+  dataType() {
+    return "text";
+  },
+  toDriver(value) {
+    return value.toISOString();
+  },
+  fromDriver(value) {
+    if (typeof value === "number") {
+      return new Date(value);
+    }
+
+    const numericValue = Number(value);
+    return value.trim() !== "" && Number.isFinite(numericValue)
+      ? new Date(numericValue)
+      : new Date(value);
+  },
+});
 
 // NOTE: table + column names are quoted to match the existing live D1 schema
 // (PascalCase tables, camelCase columns). The shape mirrors database.sql, not
@@ -25,9 +47,15 @@ export const devices = sqliteTable("Devices", {
   // always writes Date.now() (ms epoch). SQLite type affinity stores those as
   // INTEGER fine; declare them as integer here so the inferred TS type is
   // number, matching the existing Zod schema and runtime values.
-  publishAt: integer("publishAt").notNull().default(sql`(unixepoch() * 1000)`),
-  createdAt: integer("createdAt").notNull().default(sql`(unixepoch() * 1000)`),
-  updatedAt: integer("updatedAt").notNull().default(sql`(unixepoch() * 1000)`),
+  publishAt: integer("publishAt")
+    .notNull()
+    .default(sql`(unixepoch() * 1000)`),
+  createdAt: integer("createdAt")
+    .notNull()
+    .default(sql`(unixepoch() * 1000)`),
+  updatedAt: integer("updatedAt")
+    .notNull()
+    .default(sql`(unixepoch() * 1000)`),
 });
 
 export const tasks = sqliteTable("Tasks", {
@@ -35,16 +63,24 @@ export const tasks = sqliteTable("Tasks", {
   title: text("title").notNull(),
   content: text("content").notNull(),
   status: text("status").$type<TaskStatus>().notNull(),
-  createdAt: integer("createdAt").notNull().default(sql`(unixepoch() * 1000)`),
-  updatedAt: integer("updatedAt").notNull().default(sql`(unixepoch() * 1000)`),
+  createdAt: integer("createdAt")
+    .notNull()
+    .default(sql`(unixepoch() * 1000)`),
+  updatedAt: integer("updatedAt")
+    .notNull()
+    .default(sql`(unixepoch() * 1000)`),
 });
 
 export const context = sqliteTable("Context", {
   id: text("id").primaryKey().notNull(),
   index: integer("index").notNull(),
   content: text("content").notNull(),
-  createdAt: integer("createdAt").notNull().default(sql`(unixepoch() * 1000)`),
-  updatedAt: integer("updatedAt").notNull().default(sql`(unixepoch() * 1000)`),
+  createdAt: integer("createdAt")
+    .notNull()
+    .default(sql`(unixepoch() * 1000)`),
+  updatedAt: integer("updatedAt")
+    .notNull()
+    .default(sql`(unixepoch() * 1000)`),
 });
 
 // ---- better-auth tables (PascalCase, mirrors live database.sql) ----
@@ -55,15 +91,17 @@ export const user = sqliteTable("User", {
   email: text("email").notNull(),
   emailVerified: integer("emailVerified", { mode: "boolean" }).notNull(),
   image: text("image"),
-  createdAt: text("createdAt").notNull(),
-  updatedAt: text("updatedAt").notNull(),
+  createdAt: sqliteDateText("createdAt").notNull(),
+  updatedAt: sqliteDateText("updatedAt").notNull(),
   // DB-side default is the literal "user" (live DDL); the app overrides via
   // better-auth's admin plugin (defaultRole: UserRole.USER → "USER"). Kept
   // exact-match so drizzle-kit doesn't propose an ALTER.
-  role: text("role").$type<UserRole>().default("user" as UserRole),
+  role: text("role")
+    .$type<UserRole>()
+    .default("user" as UserRole),
   banned: integer("banned", { mode: "boolean" }),
   banReason: text("banReason"),
-  banExpires: integer("banExpires"),
+  banExpires: integer("banExpires", { mode: "timestamp_ms" }),
 });
 
 export const session = sqliteTable("Session", {
@@ -73,11 +111,11 @@ export const session = sqliteTable("Session", {
     .references(() => user.id),
   token: text("token").notNull(),
   impersonatedBy: text("impersonatedBy"),
-  expiresAt: text("expiresAt").notNull(),
+  expiresAt: sqliteDateText("expiresAt").notNull(),
   ipAddress: text("ipAddress"),
   userAgent: text("userAgent"),
-  createdAt: text("createdAt").notNull(),
-  updatedAt: text("updatedAt").notNull(),
+  createdAt: sqliteDateText("createdAt").notNull(),
+  updatedAt: sqliteDateText("updatedAt").notNull(),
 });
 
 export const account = sqliteTable("Account", {
@@ -89,20 +127,20 @@ export const account = sqliteTable("Account", {
   providerId: text("providerId").notNull(),
   accessToken: text("accessToken"),
   refreshToken: text("refreshToken"),
-  accessTokenExpiresAt: text("accessTokenExpiresAt"),
-  refreshTokenExpiresAt: text("refreshTokenExpiresAt"),
+  accessTokenExpiresAt: sqliteDateText("accessTokenExpiresAt"),
+  refreshTokenExpiresAt: sqliteDateText("refreshTokenExpiresAt"),
   scope: text("scope"),
   idToken: text("idToken"),
   password: text("password"),
-  createdAt: text("createdAt").notNull(),
-  updatedAt: text("updatedAt").notNull(),
+  createdAt: sqliteDateText("createdAt").notNull(),
+  updatedAt: sqliteDateText("updatedAt").notNull(),
 });
 
 export const verification = sqliteTable("Verification", {
   id: text("id").primaryKey(),
   identifier: text("identifier").notNull(),
   value: text("value").notNull(),
-  expiresAt: text("expiresAt").notNull(),
-  createdAt: text("createdAt").notNull(),
-  updatedAt: text("updatedAt").notNull(),
+  expiresAt: sqliteDateText("expiresAt").notNull(),
+  createdAt: sqliteDateText("createdAt").notNull(),
+  updatedAt: sqliteDateText("updatedAt").notNull(),
 });
